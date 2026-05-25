@@ -6,10 +6,8 @@ import (
 	"github.com/gofrs/uuid/v5"
 )
 
-// TrainingStructure
-type TrainingStructure struct {
+type TrainingPlanHistory struct {
 	ID        uuid.UUID
-	Structure string
+	PlanID    uuid.UUID
 	CreatedAt time.Time
-	UpdatedAt time.Time
 }
