@@ -1,0 +1,72 @@
+services:
+  db_training:
+    image: postgres:14-alpine
+    container_name: db_training
+    environment:
+      POSTGRES_USER: ${POSTGRES_TRAINING_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_TRAINING_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_TRAINING_DB}
+    volumes:
+      - db_training_vol:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_TRAINING_PORT}:5432
+    restart: unless-stopped
+    networks:
+      - training_net
+
+  cache:
+    image: redis:7-alpine
+    container_name: cache
+    ports:
+      - "${REDIS_PORT}:6379"
+    restart: unless-stopped
+    networks:
+      - training_net
+  nats-js:
+    image: nats:latest
+    container_name: nats-js
+    ports:
+      - "${NATS_PORT}:4222"
+      - "${HEALTH_CHECK_PORT}:8222"
+    command: [ "-js", "-sd", "/data/jetstream" ]
+    volumes:
+      - nats_vol:/data/jetstream
+    restart: unless-stopped
+    networks:
+      - training_net
+
+    # training:
+    #   container_name: training
+    #   build:
+    #     context: .
+    #     dockerfile: ./Dockerfile
+    #   ports:
+    #     - ${TRAINING_PORT}:${TRAINING_PORT}
+    #   environment:
+    #     PORT: ${TRAINING_PORT}
+    #     HOST: ${TRAINING_HOST}
+    #     POSTGRES_HOST: ${POSTGRES_TRAINING_HOST}
+    #     POSTGRES_PORT: ${POSTGRES_TRAINING_PORT}
+    #     POSTGRES_USER: ${POSTGRES_TRAINING_USER}
+    #     POSTGRES_PASSWORD: ${POSTGRES_TRAINING_PASSWORD}
+    #     POSTGRES_DB: ${POSTGRES_TRAINING_DB}
+    #     POSTGRES_USE_SSL: ${POSTGRES_TRAINING_USE_SSL}
+    #     REDIS_HOST: ${REDIS_HOST}
+    #     REDIS_PORT: ${REDIS_PORT}
+    #     SERVER_TIMEOUT: ${SERVER_TIMEOUT}
+    #     DB_TIMEOUT: ${DB_TIMEOUT}
+    #   depends_on:
+    #     - db_training
+    #     - cache
+    #     - nats-js
+    #   restart: unless-stopped
+    #   networks:
+    #     - training_net
+networks:
+  training_net:
+
+volumes:
+  db_training_vol:
+    driver: local
+  nats_vol:
+    driver: local

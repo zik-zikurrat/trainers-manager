@@ -10,13 +10,21 @@ import (
 type Config struct {
 	Env         string        `yaml:"env" env-default:"local"`
 	StoragePath string        `yaml:"storage_path" env-required:"true"`
-	Logging     LoggingConfig `yaml:"logging"`
+	PG          PGConfig      `yaml:"postgre" env-required:"true"`
+	Logging     LoggingConfig `yaml:"logging_handler"`
 }
 
 type LoggingConfig struct {
-	Level   string
-	Format  string
-	Discard bool
+	Level   string `yaml:"level"`
+	Format  string `yaml:"format"`
+	Discard bool   `yaml:"discard"`
+}
+
+type PGConfig struct {
+	PORT     int    `yaml:"port"`
+	NAME     string `yaml:"name"`
+	HOST     string `yaml:"host"`
+	PASSWORD string `yaml:"password"`
 }
 
 func MustLoad() *Config {
@@ -38,7 +46,7 @@ func MustLoad() *Config {
 func fetchConfigPath() string {
 	var res string
 
-	flag.StringVar(&res, "config", ".config/local.yaml", "path to config file")
+	flag.StringVar(&res, "config", "config/local.yaml", "path to config file")
 	flag.Parse()
 	if res == "" {
 		res = os.Getenv("CONFIG_PATH")

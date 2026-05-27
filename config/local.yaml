@@ -1,5 +1,10 @@
 env: "local" # dev, prod
-storage_path: "./storage/sso.db"
+storage_path: "./storage/trainers-manager.db"
+postgre:
+  name: training
+  port: 5432
+  password: postgre
+  host: localhost
 logging_handler:
   level: debug
   format: json
