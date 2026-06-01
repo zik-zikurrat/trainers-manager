@@ -3,6 +3,7 @@ package v1
 import (
 	"net/http"
 	"trainers-manager/internal/controller/restapi/v1/request"
+	"trainers-manager/internal/controller/restapi/v1/response"
 	"trainers-manager/internal/entity"
 
 	"github.com/gofiber/fiber/v2"
@@ -113,4 +114,28 @@ func (r *V1) DeleteStructure(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusInternalServerError, "Structure service error")
 	}
 	return ctx.Status(http.StatusNoContent).Send(nil)
+}
+
+// @Summary     Get structure
+// @Description Get training structure
+// @ID          trainingStructure
+// @Tags  	    trainingStructure
+// @Accept      json
+// @Produce     json
+// @Success     200
+// @Failure     500 {object} response.Error
+// @Router      /training/structure/:id [get]
+func (r *V1) GetStructure(ctx *fiber.Ctx) error {
+	uuidID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - structure")
+		return errorResponse(ctx, http.StatusBadRequest, "Invalid id")
+	}
+	structure, err := r.t.GetStructure(ctx.UserContext(), uuidID)
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - structure")
+		return errorResponse(ctx, http.StatusInternalServerError, "Error while getting structure")
+	}
+	resp := response.ToTrainingStructure(structure)
+	return ctx.Status(http.StatusOK).JSON(resp)
 }

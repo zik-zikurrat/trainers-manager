@@ -50,3 +50,14 @@ func (us *UseCase) DeleteStructure(ctx context.Context, id uuid.UUID) error {
 	}
 	return nil
 }
+
+// GetStructure -.
+func (us *UseCase) GetStructure(ctx context.Context, id uuid.UUID) (entity.TrainingStructure, error) {
+	const op = "training.TrainingStructure"
+	structure, err := us.repo.GetStructure(ctx, id)
+	if err != nil {
+		us.log.Error("Failed to get structure", err, op)
+		return entity.TrainingStructure{}, err
+	}
+	return structure, nil
+}

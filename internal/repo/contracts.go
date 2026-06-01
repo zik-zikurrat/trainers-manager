@@ -16,6 +16,7 @@ type TrainingRepo interface {
 	CreateStructure(context.Context, entity.TrainingStructure) error
 	UpdateStructure(context.Context, entity.TrainingStructure, uuid.UUID) error
 	DeleteStructure(context.Context, uuid.UUID) error
+	GetStructure(context.Context, uuid.UUID) (entity.TrainingStructure, error)
 	// Exercise
 	CreateExercise(context.Context, entity.Exercise) (uuid.UUID, error)
 	UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error
