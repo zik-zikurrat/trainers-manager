@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"trainers-manager/internal/entity"
+	"trainers-manager/internal/repo"
 	"trainers-manager/pkg/postgres"
+
+	"github.com/google/uuid"
 )
 
 const _defaultEntityCap = 64
@@ -19,27 +22,32 @@ func New(pg *postgres.Posgtres) *TrainingRepo {
 	return &TrainingRepo{pg}
 }
 
-// StoreStructure -.
-func (r *TrainingRepo) StoreStructure(ctx context.Context, structure entity.TrainingStructure) error {
-	_, err := r.Pool.Query(ctx, insertTrainingStructureQuery,
-		structure.Structure,
-	)
+func (r *TrainingRepo) CreateStructure(ctx context.Context, structure entity.TrainingStructure) error {
+	_, err := r.Pool.Exec(ctx, insertTrainingStructureQuery, structure.Structure)
 	if err != nil {
-		return fmt.Errorf("insert training structure: %v", err)
+		return fmt.Errorf("insert training structure: %w", err)
 	}
 	return nil
 }
 
-// StoreTraining -.
-// func (r *TrainingRepo) StoreTraining(context.Context, entity.Training) error{
-// 	err := r.Pool.QueryRow(ctx, )
-// }
+func (r *TrainingRepo) UpdateStructure(ctx context.Context, structure entity.TrainingStructure, id uuid.UUID) error {
+	ct, err := r.Pool.Exec(ctx, updateTrainingStructureQuery, structure.Structure, id)
+	if err != nil {
+		return fmt.Errorf("update training structure: %w", err)
+	}
+	if ct.RowsAffected() == 0 {
+		return repo.ErrNotFound
+	}
+	return nil
+}
 
-// // StoreTrainingPlan -.
-// func (r *TrainingRepo) StoreTrainingPlan(context.Context, []entity.TrainingPlan) error
-
-// // GetHistory -.
-// func (r *TrainingRepo) GetHistory(context.Context) ([]entity.TrainingPlanHistory, error)
-
-// // GetTrainingPlan -.
-// func (r *TrainingRepo) GetTrainingPlan(context.Context, time.Time) (entity.TrainingPlan, error)
+func (r *TrainingRepo) DeleteStructure(ctx context.Context, id uuid.UUID) error {
+	ct, err := r.Pool.Exec(ctx, deleteTrainingStructureQuery, id)
+	if err != nil {
+		return fmt.Errorf("delete training structure: %w", err)
+	}
+	if ct.RowsAffected() == 0 {
+		return repo.ErrNotFound
+	}
+	return nil
+}

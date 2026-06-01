@@ -1,1 +1,2 @@
-INSERT INTO training ()
+INSERT INTO training DEFAULT VALUES
+RETURNING id;
