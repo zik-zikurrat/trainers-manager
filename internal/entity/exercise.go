@@ -9,7 +9,7 @@ import (
 // Exercise -.
 type Exercise struct {
 	ID          uuid.UUID
-	MuscleGroup []string
+	MuscleGroup string
 	Description string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

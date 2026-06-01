@@ -45,3 +45,10 @@ func (us *UseCase) DeleteExercise(ctx context.Context, id uuid.UUID) error {
 	}
 	return nil
 }
+func (us *UseCase) LinkExercises(ctx context.Context, trainingID uuid.UUID, exerciseIDs []uuid.UUID) error {
+	if err := us.repo.LinkExercises(ctx, trainingID, exerciseIDs); err != nil {
+		us.log.Error("Failed to link exercises", err, "training.LinkExercises")
+		return err
+	}
+	return nil
+}

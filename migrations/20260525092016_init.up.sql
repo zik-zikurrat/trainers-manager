@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS training_group (
     name         VARCHAR(50) UNIQUE NOT NULL,
     accent_cycle TEXT[] NOT NULL,
     skill_cycle  TEXT[] NOT NULL
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS training_plan (
