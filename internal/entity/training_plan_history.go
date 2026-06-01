@@ -1,14 +1,24 @@
 package entity
 
 import (
+	"encoding/json"
 	"time"
 
-	"github.com/gofrs/uuid/v5"
+	"github.com/google/uuid"
 )
 
-// TrainingPlanHistory
+type HistoryAction string
+
+const (
+	HistoryActionCreate HistoryAction = "CREATE"
+	HistoryActionUpdate HistoryAction = "UPDATE"
+	HistoryActionDelete HistoryAction = "DELETE"
+)
+
 type TrainingPlanHistory struct {
 	ID        uuid.UUID
 	PlanID    uuid.UUID
+	Action    HistoryAction
+	Snapshot  json.RawMessage
 	CreatedAt time.Time
 }

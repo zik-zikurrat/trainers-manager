@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/gofrs/uuid/v5"
+	"github.com/google/uuid"
 )
 
 // TrainingStructure

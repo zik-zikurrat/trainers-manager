@@ -3,13 +3,16 @@ package entity
 import (
 	"time"
 
-	"github.com/gofrs/uuid/v5"
+	"github.com/google/uuid"
 )
 
-// TrainingPlan
 type TrainingPlan struct {
-	ID        uuid.UUID
-	Plan      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID                  uuid.UUID
+	Plan                string
+	TrainID             uuid.UUID
+	Accent              string
+	Skills              []string
+	TrainingStructureID uuid.UUID
+	CreatedAt           time.Time
+	UpdatedAt           time.Time
 }

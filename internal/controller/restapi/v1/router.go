@@ -15,6 +15,15 @@ func NewTrainingRoutes(apiV1Group fiber.Router, t usecase.Training, l logger.Int
 
 	{
 		// trainingGroup.Get("/plan/history", r.History)
-		trainingGroup.Post("/structure", r.Structure)
+
+		// structure
+		trainingGroup.Post("/structure", r.CreateStructure)
+		trainingGroup.Patch("/structure/:id", r.UpdateStructure)
+		trainingGroup.Delete("/structure/:id", r.DeleteStructure)
+		// exercise
+		trainingGroup.Post("/exercise", r.CreateExercise)
+		trainingGroup.Get("/exercise", r.ListExercises)
+		trainingGroup.Patch("/exercise/:id", r.UpdateExercise)
+		trainingGroup.Delete("/exercise/:id", r.DeleteExercise)
 	}
 }
