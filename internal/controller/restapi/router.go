@@ -2,6 +2,7 @@ package restapi
 
 import (
 	"trainers-manager/internal/config"
+	"trainers-manager/internal/controller/restapi/middleware"
 	v1 "trainers-manager/internal/controller/restapi/v1"
 	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/logger"
@@ -28,6 +29,7 @@ func NewRouter(app *fiber.App, cfg *config.Config, t usecase.Training, l logger.
 
 	apiV1Group := app.Group("/v1")
 	{
+		apiV1Group.Use(middleware.TraicingMiddleware())
 		v1.NewTrainingRoutes(apiV1Group, t, l)
 	}
 }
