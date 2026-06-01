@@ -100,3 +100,10 @@ func (r *TrainingRepo) GetPlanHistory(ctx context.Context, planID uuid.UUID) ([]
 	}
 	return out, rows.Err()
 }
+
+func (r *TrainingRepo) EnsureHistoryPartitions(ctx context.Context, ahead int) error {
+	if _, err := r.Pool.Exec(ctx, "SELECT ensure_history_partitions($1)", ahead); err != nil {
+		return fmt.Errorf("ensure history partitions: %w", err)
+	}
+	return nil
+}

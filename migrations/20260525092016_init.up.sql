@@ -44,6 +44,30 @@ CREATE TABLE training_plan_history (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 ) PARTITION BY RANGE (created_at);
 
-CREATE TABLE training_plan_history_2026_01
-    PARTITION OF training_plan_history
-    FOR VALUES FROM ('2026-01-01') TO ('2026-02-01');
+CREATE OR REPLACE FUNCTION ensure_history_partitions(ahead int DEFAULT 1)
+RETURNS void
+LANGUAGE plpgsql AS $$
+DECLARE
+    base_start date := date_trunc('quarter', now())::date; 
+    i          int;
+    p_start    date;
+    p_end      date;
+    p_name     text;
+BEGIN
+    FOR i IN 0..ahead LOOP
+        p_start := base_start + make_interval(months => i * 3);
+        p_end   := p_start    + make_interval(months => 3);
+        p_name  := format('training_plan_history_%sq%s',
+                          to_char(p_start, 'YYYY'),
+                          to_char(p_start, 'Q'));
+
+        EXECUTE format(
+            'CREATE TABLE IF NOT EXISTS %I PARTITION OF training_plan_history '
+            'FOR VALUES FROM (%L) TO (%L)',
+            p_name, p_start, p_end
+        );
+    END LOOP;
+END;
+$$;
+
+SELECT ensure_history_partitions(1);

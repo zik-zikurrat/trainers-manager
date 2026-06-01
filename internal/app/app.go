@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -15,13 +16,9 @@ import (
 )
 
 func Run(cfg *config.Config) error {
-	// Run migrations
 	Migrate(cfg)
-
-	// Create logger
 	l := logger.New(cfg.Logging.Level)
 
-	// Create postgres connection
 	pg, err := postgres.New(cfg, l)
 	if err != nil {
 		l.Fatal("app - Run - postgres.New: %w", err)
@@ -29,24 +26,24 @@ func Run(cfg *config.Config) error {
 	}
 	defer pg.Close()
 
-	// Create training usecase
-	trainingUseCase := training.New(persistent.New(pg), l)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
-	// Create new http server
-	httpserver := httpserver.New(l, cfg)
+	trainingRepo := persistent.New(pg)
+	trainingUseCase := training.New(trainingRepo, l)
+
+	StartPartitionMaintainer(ctx, trainingRepo, l)
+
+	httpserver := httpserver.New(ctx, l, cfg)
 	restapi.NewRouter(httpserver.App, cfg, trainingUseCase, l)
 	httpserver.Start()
 
-	// Notify
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
-
 	select {
-	case s := <-interrupt:
-		l.Info("app - Run - signal: %s", s.String())
+	case <-ctx.Done():
+		l.Info("app - Run - shutdown signal received")
 	case err := <-httpserver.Notify():
 		l.Error(fmt.Errorf("app - Run - httpserver.Notify: %w", err))
 	}
 
-	return nil
+	return httpserver.Shutdown()
 }

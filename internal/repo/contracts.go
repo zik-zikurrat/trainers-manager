@@ -28,4 +28,6 @@ type TrainingRepo interface {
 	UpdateTrainingPlan(context.Context, entity.TrainingPlan, uuid.UUID) error
 	GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
 	GetPlanHistory(context.Context, uuid.UUID) ([]entity.TrainingPlanHistory, error)
+	// Partitions
+	EnsureHistoryPartitions(context.Context, int) error
 }
