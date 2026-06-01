@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS training_structure (
 
 CREATE TABLE IF NOT EXISTS exercises (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    muscle VARCHAR(50)   
+    muscle VARCHAR(50), 
     description TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -19,15 +19,23 @@ CREATE TABLE IF NOT EXISTS training (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS training_group (    
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name         VARCHAR(50) UNIQUE NOT NULL,
+    accent_cycle TEXT[] NOT NULL,
+    skill_cycle  TEXT[] NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS training_plan (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    plan TEXT,
-    train_id UUID NOT NULL REFERENCES training(id),
-    accent VARCHAR(50),
-    skills TEXT[],
+    id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    plan                  TEXT,
+    train_id              UUID NOT NULL REFERENCES training(id),
+    group_id              UUID NOT NULL REFERENCES training_group(id),  
     training_structure_id UUID NOT NULL REFERENCES training_structure(id),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    accent                VARCHAR(50),
+    skills                TEXT[],
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS training_exercises (
@@ -37,10 +45,10 @@ CREATE TABLE IF NOT EXISTS training_exercises (
 );
 
 CREATE TABLE training_plan_history (
-    id UUID NOT NULL DEFAULT gen_random_uuid(),
-    plan_id UUID NOT NULL,
-    action TEXT NOT NULL, 
-    snapshot JSONB NOT NULL,
+    id         UUID NOT NULL DEFAULT gen_random_uuid(),
+    plan_id    UUID NOT NULL REFERENCES training_plan(id), 
+    action     TEXT NOT NULL,
+    snapshot   JSONB NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 ) PARTITION BY RANGE (created_at);
 
