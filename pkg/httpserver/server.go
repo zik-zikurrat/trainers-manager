@@ -28,8 +28,8 @@ type Server struct {
 }
 
 // New -.
-func New(l logger.Interface, cfg *config.Config) *Server {
-	group, ctx := errgroup.WithContext(context.Background())
+func New(ctx context.Context, l logger.Interface, cfg *config.Config) *Server {
+	group, ctx := errgroup.WithContext(ctx)
 	group.SetLimit(1)
 
 	s := &Server{
