@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS training_structure (
 
 CREATE TABLE IF NOT EXISTS exercises (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    muscle_group TEXT[],
+    muscle VARCHAR(50)   
     description TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
