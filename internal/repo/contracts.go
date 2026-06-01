@@ -10,6 +10,7 @@ import (
 )
 
 var ErrNotFound = errors.New("not found")
+var ErrAlreadyExists = errors.New("already exists")
 
 type TrainingRepo interface {
 
@@ -31,11 +32,12 @@ type TrainingRepo interface {
 	GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
 	GetPlanHistory(context.Context, uuid.UUID) ([]entity.TrainingPlanHistory, error)
 	GetPlanByCreatedAt(context.Context, time.Time) (entity.TrainingPlanHistory, error)
-	// Training group
-	CreateTrainingGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
-	UpdateTrainingGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
-	GetTrainingGroup(context.Context, uuid.UUID) (entity.TrainingGroup, error)
-	DeleteTrainingGroup(context.Context, uuid.UUID) error
+	// Groups
+	CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
+	ListGroups(context.Context) ([]entity.TrainingGroup, error)
+	UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
+	DeleteGroup(context.Context, uuid.UUID) error
+	GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
 	// Partitions
 	EnsureHistoryPartitions(context.Context, int) error
 }

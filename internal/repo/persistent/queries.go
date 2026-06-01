@@ -49,3 +49,18 @@ var getRecentPlans string
 
 //go:embed query/get_structure.sql
 var getTrainingStructure string
+
+//go:embed query/insert_training_group.sql
+var insertTrainingGroupQuery string
+
+//go:embed query/list_training_groups.sql
+var listTrainingGroupsQuery string
+
+//go:embed query/update_training_group.sql
+var updateTrainingGroupQuery string
+
+//go:embed query/delete_training_group.sql
+var deleteTrainingGroupQuery string
+
+//go:embed query/get_training_group_by_name.sql
+var getTrainingGroupByNameQuery string

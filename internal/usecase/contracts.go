@@ -29,11 +29,12 @@ type (
 		UpdateTrainingPlan(context.Context, entity.TrainingPlan, uuid.UUID) error
 		GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
 		GetPlanHistory(context.Context, uuid.UUID) ([]entity.TrainingPlanHistory, error)
-		// Training group
-		CreateTrainingGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
-		UpdateTrainingGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
-		GetTrainingGroup(context.Context, uuid.UUID) (entity.TrainingGroup, error)
-		DeleteTrainingGroup(context.Context, uuid.UUID) error
+		// Groups
+		CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
+		ListGroups(context.Context) ([]entity.TrainingGroup, error)
+		UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
+		DeleteGroup(context.Context, uuid.UUID) error
+		GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
 		// Generate
 		// Generate(context.Context, in) (entity.TrainingPlan, error)
 	}
