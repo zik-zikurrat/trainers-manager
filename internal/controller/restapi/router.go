@@ -29,7 +29,7 @@ func NewRouter(app *fiber.App, cfg *config.Config, t usecase.Training, l logger.
 
 	apiV1Group := app.Group("/v1")
 	{
-		apiV1Group.Use(middleware.TraicingMiddleware())
+		apiV1Group.Use(middleware.TracingMiddleware())
 		v1.NewTrainingRoutes(apiV1Group, t, l)
 	}
 }

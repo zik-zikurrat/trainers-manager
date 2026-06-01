@@ -9,7 +9,7 @@ type ctxKey string
 
 const TraceIDKey ctxKey = "trace_id"
 
-func TraicingMiddleware() fiber.Handler {
+func TracingMiddleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		traceID := c.Get("X-Trace-ID")
 		if traceID == "" {
