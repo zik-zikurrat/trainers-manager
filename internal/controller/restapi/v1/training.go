@@ -2,6 +2,7 @@ package v1
 
 import (
 	"net/http"
+	"trainers-manager/internal/controller/restapi/middleware"
 	"trainers-manager/internal/controller/restapi/v1/request"
 	"trainers-manager/internal/controller/restapi/v1/response"
 	"trainers-manager/internal/entity"
@@ -42,6 +43,10 @@ func (r *V1) CreateStructure(ctx *fiber.Ctx) error {
 
 		return errorResponse(ctx, http.StatusInternalServerError, "Structure service error")
 	}
+	r.l.Info(
+		"structure successfully created trace_id: %s",
+		middleware.GetTraceID(ctx),
+	)
 
 	return ctx.Status(http.StatusCreated).JSON(map[string]string{
 		"msg": "CREATED",

@@ -1,10 +1,7 @@
 package webapi
 
 import (
-	"context"
-
 	"trainers-manager/internal/config"
-	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/postgres"
 )
 
@@ -13,6 +10,8 @@ type Generator struct {
 	*postgres.Posgtres
 }
 
-func (g *Generator) Generate(ctx context.Context, prompt usecase.GeneratePrompt) {
+// func New(cfg *config.Config)
 
-}
+// func (g *Generator) Generate(ctx context.Context, prompt usecase.GeneratePrompt) {
+
+// }

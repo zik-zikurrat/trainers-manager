@@ -16,8 +16,16 @@ func TracingMiddleware() fiber.Handler {
 			traceID = uuid.NewString()
 		}
 		c.Locals(TraceIDKey, traceID)
+		c.Response().Header.Set("X-Trace-ID", traceID)
 
-		c.Set("X-Trace-ID", traceID)
 		return c.Next()
 	}
+}
+
+func GetTraceID(c *fiber.Ctx) string {
+	v := c.Locals(TraceIDKey)
+	if v == nil {
+		return ""
+	}
+	return v.(string)
 }

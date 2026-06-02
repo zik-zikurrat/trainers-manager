@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS training_group (
     id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name         VARCHAR(50) UNIQUE NOT NULL,
     accent_cycle TEXT[] NOT NULL,
-    skill_cycle  TEXT[] NOT NULL
+    skill_cycle  TEXT[] NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS training_plan (
     group_id              UUID NOT NULL REFERENCES training_group(id),  
     training_structure_id UUID NOT NULL REFERENCES training_structure(id),
     accent                VARCHAR(50),
-    skills                TYPE TEXT USING array_to_string(skills, ', '),
+    skills                TEXT[],
     created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

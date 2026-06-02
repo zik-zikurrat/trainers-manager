@@ -15,6 +15,11 @@ server:
   prefork: false
   shutdown_timeout: 3
 
+llm:
+  name_key:
+    OpenAI: SOMEKEY
+  read_timeout: 60
+
 logging_handler:
   level: debug
   format: json

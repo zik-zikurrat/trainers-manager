@@ -23,7 +23,8 @@ type LoggingConfig struct {
 }
 
 type LLMConfig struct {
-	NameKey map[string]string `yaml:"name_key"`
+	NameKey     map[string]string `yaml:"name_key"`
+	ReadTimeout int               `yaml:"read_timeout"`
 }
 
 type PGConfig struct {
