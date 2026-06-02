@@ -1,4 +1,4 @@
-env: "local" # dev, prod
+env: "local"
 storage_path: "./storage/trainers-manager.db"
 postgre:
   user: postgres
@@ -16,9 +16,9 @@ server:
   shutdown_timeout: 3
 
 llm:
-  name_key:
-    OpenAI: SOMEKEY
-  read_timeout: 60
+  base_url: "http://localhost:11434/v1"
+  api_key: "ollama"          
+  model: "llama3.1:8b"       
 
 logging_handler:
   level: debug

@@ -23,8 +23,9 @@ type LoggingConfig struct {
 }
 
 type LLMConfig struct {
-	NameKey     map[string]string `yaml:"name_key"`
-	ReadTimeout int               `yaml:"read_timeout"`
+	BaseURL string `yaml:"base_url" env:"LLM_BASE_URL"`
+	APIKey  string `yaml:"api_key"  env:"LLM_API_KEY"`
+	Model   string `yaml:"model"    env:"LLM_MODEL"`
 }
 
 type PGConfig struct {
@@ -63,13 +64,13 @@ func MustLoad() *Config {
 
 func fetchConfigPath() string {
 	var res string
-
-	flag.StringVar(&res, "config", "config/local.yaml", "path to config file")
+	flag.StringVar(&res, "config", "", "path to config file")
 	flag.Parse()
 	if res == "" {
 		res = os.Getenv("CONFIG_PATH")
 	}
-
+	if res == "" {
+		res = "config/local.yaml"
+	}
 	return res
-
 }
