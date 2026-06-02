@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"trainers-manager/internal/controller/restapi/v1/request"
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/usecase"
 
@@ -13,19 +12,66 @@ import (
 
 const _limitPlans = 4
 
-func (us *UseCase) CreatePrompt(ctx context.Context, in request.Generate) (usecase.GeneratePrompt, error) {
+func (us *UseCase) Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error) {
 	const op = "training.Generate"
 
-	group, err := us.repo.GetGroupByName(ctx, in.TrainType)
+	prompt, group, err := us.buildPrompt(ctx, trainType, structureID)
+	if err != nil {
+		return entity.TrainingPlan{}, err
+	}
+
+	gen, err := us.gen.Generate(ctx, prompt)
+	if err != nil {
+		us.log.Error("llm generate failed", err, op)
+		return entity.TrainingPlan{}, err
+	}
+
+	validIDs, err := validateExerciseIDs(gen.ExerciseIDs, prompt.Pool)
+	if err != nil {
+		us.log.Error("llm returned invalid exercises", err, op)
+		return entity.TrainingPlan{}, err
+	}
+
+	trainID, err := us.repo.CreateTraining(ctx)
+	if err != nil {
+		us.log.Error("create training failed", err, op)
+		return entity.TrainingPlan{}, err
+	}
+	if err := us.linkExercises(ctx, trainID, validIDs); err != nil {
+		return entity.TrainingPlan{}, err
+	}
+
+	plan := entity.TrainingPlan{
+		Plan:                gen.PlanText,
+		TrainID:             trainID,
+		GroupID:             group.ID,
+		Accent:              prompt.Accent,
+		Skills:              prompt.Skills,
+		TrainingStructureID: structureID,
+	}
+	planID, err := us.repo.StoreTrainingPlan(ctx, plan)
+	if err != nil {
+		us.log.Error("store plan failed", err, op)
+		return entity.TrainingPlan{}, err
+	}
+	plan.ID = planID
+
+	return plan, nil
+}
+
+func (us *UseCase) buildPrompt(ctx context.Context, trainType string, structureID uuid.UUID) (usecase.GeneratePrompt, entity.TrainingGroup, error) {
+	const op = "training.buildPrompt"
+
+	group, err := us.repo.GetGroupByName(ctx, trainType)
 	if err != nil {
 		us.log.Error("group lookup failed", err, op)
-		return usecase.GeneratePrompt{}, err
+		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
 	recent, err := us.repo.RecentPlans(ctx, group.ID, _limitPlans)
 	if err != nil {
 		us.log.Error("recent plans failed", err, op)
-		return usecase.GeneratePrompt{}, err
+		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
 	var lastAccent, lastSkills string
@@ -33,19 +79,19 @@ func (us *UseCase) CreatePrompt(ctx context.Context, in request.Generate) (useca
 		lastAccent = recent[0].Accent
 		lastSkills = recent[0].Skills
 	}
-
 	accent := nextInCycle(group.AccentCycle, lastAccent)
 	skills := nextInCycle(group.SkillCycle, lastSkills)
 
-	structure, err := us.repo.GetStructure(ctx, in.StructureID)
+	structure, err := us.repo.GetStructure(ctx, structureID)
 	if err != nil {
 		us.log.Error("structure lookup failed", err, op)
-		return usecase.GeneratePrompt{}, err
+		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
+
 	pool, err := us.repo.ListExercises(ctx)
 	if err != nil {
 		us.log.Error("exercises pool failed", err, op)
-		return usecase.GeneratePrompt{}, err
+		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
 	return usecase.GeneratePrompt{
@@ -54,7 +100,7 @@ func (us *UseCase) CreatePrompt(ctx context.Context, in request.Generate) (useca
 		Skills:    skills,
 		Recent:    recent,
 		Pool:      pool,
-	}, nil
+	}, group, nil
 }
 
 func validateExerciseIDs(got []uuid.UUID, pool []entity.Exercise) ([]uuid.UUID, error) {
@@ -94,48 +140,3 @@ func (us *UseCase) linkExercises(ctx context.Context, trainingID uuid.UUID, exer
 	}
 	return nil
 }
-
-// gen, err := us.gen.Generate(ctx, usecase.GeneratePrompt{
-// 	Structure: structure.Structure,
-// 	Accent:    accent,
-// 	Skills:    skills,
-// 	Recent:    recent,
-// 	Pool:      pool,
-// })
-// if err != nil {
-// 	us.log.Error("llm generate failed", err, op)
-// 	return entity.TrainingPlan{}, err
-// }
-
-// validIDs, err := validateExerciseIDs(gen.ExerciseIDs, pool)
-// if err != nil {
-// 	us.log.Error("llm returned invalid exercises", err, op)
-// 	return entity.TrainingPlan{}, err
-// }
-
-// trainID, err := us.repo.CreateTraining(ctx)
-// if err != nil {
-// 	us.log.Error("create training failed", err, op)
-// 	return entity.TrainingPlan{}, err
-// }
-// if err := us.linkExercises(ctx, trainID, validIDs); err != nil {
-// 	us.log.Error("link exercises failed", err, op)
-// 	return entity.TrainingPlan{}, err
-// }
-
-// plan := entity.TrainingPlan{
-// 	Plan:                gen.PlanText,
-// 	TrainID:             trainID,
-// 	GroupID:             group.ID,
-// 	Accent:              accent,
-// 	Skills:              skills,
-// 	TrainingStructureID: in.StructureID,
-// }
-// planID, err := us.repo.StoreTrainingPlan(ctx, plan)
-// if err != nil {
-// 	us.log.Error("store plan failed", err, op)
-// 	return entity.TrainingPlan{}, err
-// }
-// plan.ID = planID
-
-// return plan, nil

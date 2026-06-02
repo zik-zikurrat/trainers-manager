@@ -34,10 +34,11 @@ type (
 		UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
 		DeleteGroup(context.Context, uuid.UUID) error
 		GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
+		// Generate
+		Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error)
 	}
 )
 type PlanGenerator interface {
-	CreatePrompt(ctx context.Context, trainType string, structureID uuid.UUID) (GeneratePrompt, error)
 	Generate(ctx context.Context, in GeneratePrompt) (GeneratedPlan, error)
 }
 
