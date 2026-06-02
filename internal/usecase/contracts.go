@@ -17,6 +17,7 @@ type (
 		UpdateStructure(context.Context, entity.TrainingStructure, uuid.UUID) error
 		DeleteStructure(context.Context, uuid.UUID) error
 		GetStructure(context.Context, uuid.UUID) (entity.TrainingStructure, error)
+		ListStructure(context.Context) ([]entity.TrainingStructure, error)
 		// Exercises
 		CreateExercise(context.Context, entity.Exercise) (uuid.UUID, error)
 		UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error

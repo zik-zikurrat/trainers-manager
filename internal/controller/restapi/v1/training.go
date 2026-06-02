@@ -144,3 +144,25 @@ func (r *V1) GetStructure(ctx *fiber.Ctx) error {
 	resp := response.ToTrainingStructure(structure)
 	return ctx.Status(http.StatusOK).JSON(resp)
 }
+
+// @Summary     List structure
+// @Description List training structure
+// @ID          trainingStructure
+// @Tags  	    trainingStructure
+// @Accept      json
+// @Produce     json
+// @Success     200
+// @Failure     500 {object} response.Error
+// @Router      /training/structure [get]
+func (r *V1) ListStructure(ctx *fiber.Ctx) error {
+	structures, err := r.t.ListStructure(ctx.UserContext())
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - structure")
+		return errorResponse(ctx, http.StatusInternalServerError, "Error while getting structure")
+	}
+	resp := make(map[uuid.UUID]response.TrainingStructure, len(structures))
+	for _, structure := range structures {
+		resp[structure.ID] = response.ToTrainingStructure(structure)
+	}
+	return ctx.Status(http.StatusOK).JSON(resp)
+}

@@ -11,6 +11,12 @@ var updateTrainingStructureQuery string
 //go:embed query/delete_training_structure.sql
 var deleteTrainingStructureQuery string
 
+//go:embed query/get_structure.sql
+var getTrainingStructure string
+
+//go:embed query/list_training_structure.sql
+var listTrainingStructure string
+
 //go:embed query/insert_exercise.sql
 var insertExerciseQuery string
 
@@ -46,9 +52,6 @@ var getPlanHistoryQuery string
 
 //go:embed query/recent_plans.sql
 var getRecentPlans string
-
-//go:embed query/get_structure.sql
-var getTrainingStructure string
 
 //go:embed query/insert_training_group.sql
 var insertTrainingGroupQuery string

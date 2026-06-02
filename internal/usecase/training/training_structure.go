@@ -47,3 +47,14 @@ func (us *UseCase) GetStructure(ctx context.Context, id uuid.UUID) (entity.Train
 	}
 	return structure, nil
 }
+
+// ListStructure -.
+func (us *UseCase) ListStructure(ctx context.Context) ([]entity.TrainingStructure, error) {
+	const op = "training.TrainingStructure"
+	structures, err := us.repo.ListStructure(ctx)
+	if err != nil {
+		us.log.Error("Failed to get structure", err, op)
+		return nil, err
+	}
+	return structures, nil
+}
