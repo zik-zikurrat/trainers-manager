@@ -33,7 +33,7 @@ func (r *V1) CreateExercise(ctx *fiber.Ctx) error {
 	}
 
 	id, err := r.t.CreateExercise(ctx.UserContext(), entity.Exercise{
-		MuscleGroup: req.MuscleGroup,
+		Muscle:      req.Muscle,
 		Description: req.Description,
 	})
 	if err != nil {
@@ -89,7 +89,7 @@ func (r *V1) UpdateExercise(ctx *fiber.Ctx) error {
 	}
 
 	err = r.t.UpdateExercise(ctx.UserContext(), entity.Exercise{
-		MuscleGroup: req.MuscleGroup,
+		Muscle:      req.Muscle,
 		Description: req.Description,
 	}, uuidID)
 	switch {

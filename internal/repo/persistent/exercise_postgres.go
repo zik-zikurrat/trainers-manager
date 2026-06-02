@@ -12,7 +12,7 @@ import (
 
 func (r *TrainingRepo) CreateExercise(ctx context.Context, e entity.Exercise) (uuid.UUID, error) {
 	var id uuid.UUID
-	err := r.Pool.QueryRow(ctx, insertExerciseQuery, e.MuscleGroup, e.Description).Scan(&id)
+	err := r.Pool.QueryRow(ctx, insertExerciseQuery, e.Muscle, e.Description).Scan(&id)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("insert exercise: %w", err)
 	}
@@ -29,7 +29,7 @@ func (r *TrainingRepo) ListExercises(ctx context.Context) ([]entity.Exercise, er
 	out := make([]entity.Exercise, 0, _defaultEntityCap)
 	for rows.Next() {
 		var e entity.Exercise
-		if err := rows.Scan(&e.ID, &e.MuscleGroup, &e.Description, &e.CreatedAt, &e.UpdatedAt); err != nil {
+		if err := rows.Scan(&e.ID, &e.Muscle, &e.Description, &e.CreatedAt, &e.UpdatedAt); err != nil {
 			return nil, fmt.Errorf("list exercises scan: %w", err)
 		}
 		out = append(out, e)
@@ -41,7 +41,7 @@ func (r *TrainingRepo) ListExercises(ctx context.Context) ([]entity.Exercise, er
 }
 
 func (r *TrainingRepo) UpdateExercise(ctx context.Context, e entity.Exercise, id uuid.UUID) error {
-	ct, err := r.Pool.Exec(ctx, updateExerciseQuery, e.MuscleGroup, e.Description, id)
+	ct, err := r.Pool.Exec(ctx, updateExerciseQuery, e.Muscle, e.Description, id)
 	if err != nil {
 		return fmt.Errorf("update exercise: %w", err)
 	}
