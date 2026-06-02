@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -84,10 +85,13 @@ func (g *Generator) Generate(ctx context.Context, prompt usecase.GeneratePrompt)
 		return usecase.GeneratedPlan{}, fmt.Errorf("do request: %w", err)
 	}
 	defer resp.Body.Close()
-
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return usecase.GeneratedPlan{}, fmt.Errorf("read body: %w", err)
+	}
 	var chatResp chatResponse
-	if err := json.NewDecoder(resp.Body).Decode(&chatResp); err != nil {
-		return usecase.GeneratedPlan{}, fmt.Errorf("decode response: %w", err)
+	if err := json.Unmarshal(bodyBytes, &chatResp); err != nil {
+		return usecase.GeneratedPlan{}, fmt.Errorf("decode response: %w (raw: %s)", err, string(bodyBytes))
 	}
 
 	if resp.StatusCode != http.StatusOK {

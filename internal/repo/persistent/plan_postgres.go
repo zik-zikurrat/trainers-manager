@@ -21,7 +21,7 @@ func (r *TrainingRepo) StoreTrainingPlan(ctx context.Context, p entity.TrainingP
 	defer tx.Rollback(ctx)
 
 	err = tx.QueryRow(ctx, insertTrainingPlanQuery,
-		p.Plan, p.TrainID, p.Accent, p.Skills, p.TrainingStructureID,
+		p.Plan, p.Status, p.TrainID, p.GroupID, p.Accent, p.Skills, p.TrainingStructureID,
 	).Scan(&p.ID, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("store plan insert: %w", err)
