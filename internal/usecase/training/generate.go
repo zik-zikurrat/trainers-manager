@@ -57,8 +57,6 @@ func (us *UseCase) CreatePrompt(ctx context.Context, in request.Generate) (useca
 	}, nil
 }
 
-func (us *UseCase) Generate(ctx context.Context, prompt usecase.GeneratePrompt)
-
 func validateExerciseIDs(got []uuid.UUID, pool []entity.Exercise) ([]uuid.UUID, error) {
 	allowed := make(map[uuid.UUID]struct{}, len(pool))
 	for _, e := range pool {

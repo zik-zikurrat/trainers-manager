@@ -2,13 +2,17 @@ package webapi
 
 import (
 	"context"
-	"errors"
 
+	"trainers-manager/internal/config"
 	"trainers-manager/internal/usecase"
+	"trainers-manager/pkg/postgres"
 )
 
-type StubGenerator struct{}
+type Generator struct {
+	cfg *config.Config
+	*postgres.Posgtres
+}
 
-func (StubGenerator) Generate(ctx context.Context, in usecase.GeneratePrompt) (usecase.GeneratedPlan, error) {
-	return usecase.GeneratedPlan{}, errors.New("llm generator not implemented")
+func (g *Generator) Generate(ctx context.Context, prompt usecase.GeneratePrompt) {
+
 }

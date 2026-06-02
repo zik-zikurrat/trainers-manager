@@ -31,7 +31,7 @@ func Run(cfg *config.Config) error {
 	defer stop()
 
 	trainingRepo := persistent.New(pg)
-	trainingUseCase := training.New(persistent.New(pg), webapi.StubGenerator{}, l)
+	trainingUseCase := training.New(persistent.New(pg), webapi.Generator{}, l)
 	StartPartitionMaintainer(ctx, trainingRepo, l)
 
 	httpserver := httpserver.New(ctx, l, cfg)

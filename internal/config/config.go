@@ -11,6 +11,7 @@ type Config struct {
 	Env         string        `yaml:"env" env-default:"local"`
 	StoragePath string        `yaml:"storage_path" env-required:"true"`
 	PG          PGConfig      `yaml:"postgre" env-required:"true"`
+	LLM         LLMConfig     `yaml:"llm"`
 	Server      ServerConfig  `yaml:"server" env-required:"true"`
 	Logging     LoggingConfig `yaml:"logging_handler"`
 }
@@ -19,6 +20,10 @@ type LoggingConfig struct {
 	Level   string `yaml:"level"`
 	Format  string `yaml:"format"`
 	Discard bool   `yaml:"discard"`
+}
+
+type LLMConfig struct {
+	NameKey map[string]string `yaml:"name_key"`
 }
 
 type PGConfig struct {

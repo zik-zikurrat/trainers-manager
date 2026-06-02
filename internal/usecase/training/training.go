@@ -3,7 +3,7 @@ package training
 import (
 	"context"
 	"trainers-manager/internal/repo"
-	"trainers-manager/internal/usecase"
+	"trainers-manager/internal/repo/webapi"
 	"trainers-manager/pkg/logger"
 
 	"github.com/google/uuid"
@@ -12,10 +12,10 @@ import (
 type UseCase struct {
 	log  *logger.Logger
 	repo repo.TrainingRepo
-	gen  usecase.PlanGenerator
+	gen  webapi.Generator
 }
 
-func New(r repo.TrainingRepo, gen usecase.PlanGenerator, log *logger.Logger) *UseCase {
+func New(r repo.TrainingRepo, gen webapi.Generator, log *logger.Logger) *UseCase {
 	return &UseCase{
 		repo: r,
 		log:  log,
