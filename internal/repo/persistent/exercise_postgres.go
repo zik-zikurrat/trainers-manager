@@ -61,3 +61,12 @@ func (r *TrainingRepo) DeleteExercise(ctx context.Context, id uuid.UUID) error {
 	}
 	return nil
 }
+func (r *TrainingRepo) LinkExercises(ctx context.Context, trainingID uuid.UUID, exerciseIDs []uuid.UUID) error {
+	if len(exerciseIDs) == 0 {
+		return nil
+	}
+	if _, err := r.Pool.Exec(ctx, linkExercisesQuery, trainingID, exerciseIDs); err != nil {
+		return fmt.Errorf("link exercises: %w", err)
+	}
+	return nil
+}

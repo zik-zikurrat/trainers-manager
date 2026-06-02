@@ -3,7 +3,6 @@ package repo
 import (
 	"context"
 	"errors"
-	"time"
 	"trainers-manager/internal/entity"
 
 	"github.com/google/uuid"
@@ -31,13 +30,14 @@ type TrainingRepo interface {
 	UpdateTrainingPlan(context.Context, entity.TrainingPlan, uuid.UUID) error
 	GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
 	GetPlanHistory(context.Context, uuid.UUID) ([]entity.TrainingPlanHistory, error)
-	GetPlanByCreatedAt(context.Context, time.Time) (entity.TrainingPlanHistory, error)
 	// Groups
 	CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
 	ListGroups(context.Context) ([]entity.TrainingGroup, error)
 	UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
 	DeleteGroup(context.Context, uuid.UUID) error
 	GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
+	// Generation
+	RecentPlans(context.Context, uuid.UUID, int) ([]entity.TrainingPlan, error)
 	// Partitions
 	EnsureHistoryPartitions(context.Context, int) error
 }

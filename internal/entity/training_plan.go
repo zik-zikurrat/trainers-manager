@@ -10,8 +10,9 @@ type TrainingPlan struct {
 	ID                  uuid.UUID
 	Plan                string
 	TrainID             uuid.UUID
+	GroupID             uuid.UUID
 	Accent              string
-	Skills              []string
+	Skills              string
 	TrainingStructureID uuid.UUID
 	CreatedAt           time.Time
 	UpdatedAt           time.Time

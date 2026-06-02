@@ -9,6 +9,7 @@ import (
 	"trainers-manager/internal/config"
 	"trainers-manager/internal/controller/restapi"
 	"trainers-manager/internal/repo/persistent"
+	"trainers-manager/internal/repo/webapi"
 	"trainers-manager/internal/usecase/training"
 	"trainers-manager/pkg/httpserver"
 	"trainers-manager/pkg/logger"
@@ -30,8 +31,7 @@ func Run(cfg *config.Config) error {
 	defer stop()
 
 	trainingRepo := persistent.New(pg)
-	trainingUseCase := training.New(trainingRepo, l)
-
+	trainingUseCase := training.New(persistent.New(pg), webapi.StubGenerator{}, l)
 	StartPartitionMaintainer(ctx, trainingRepo, l)
 
 	httpserver := httpserver.New(ctx, l, cfg)

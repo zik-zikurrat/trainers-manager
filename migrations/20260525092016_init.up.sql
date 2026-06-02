@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS training_plan (
     group_id              UUID NOT NULL REFERENCES training_group(id),  
     training_structure_id UUID NOT NULL REFERENCES training_structure(id),
     accent                VARCHAR(50),
-    skills                TEXT[],
+    skills                TYPE TEXT USING array_to_string(skills, ', '),
     created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

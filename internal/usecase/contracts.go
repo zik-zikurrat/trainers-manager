@@ -22,7 +22,6 @@ type (
 		UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error
 		DeleteExercise(context.Context, uuid.UUID) error
 		ListExercises(context.Context) ([]entity.Exercise, error)
-		LinkExercises(context.Context, uuid.UUID, []uuid.UUID) error
 		// Training / Plan / History
 		CreateTraining(context.Context) (uuid.UUID, error)
 		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
@@ -35,7 +34,22 @@ type (
 		UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
 		DeleteGroup(context.Context, uuid.UUID) error
 		GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
-		// Generate
-		// Generate(context.Context, in) (entity.TrainingPlan, error)
 	}
 )
+type PlanGenerator interface {
+	Generate(ctx context.Context, in GeneratePrompt) (GeneratedPlan, error)
+}
+
+type GeneratePrompt struct {
+	Structure string
+	Accent    string
+	Skills    string
+	Recent    []entity.TrainingPlan
+	Pool      []entity.Exercise
+}
+
+// GeneratedPlan — что вернула LLM (после парсинга JSON).
+type GeneratedPlan struct {
+	ExerciseIDs []uuid.UUID
+	PlanText    string
+}

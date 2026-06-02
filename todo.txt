@@ -1,1 +1,49 @@
-Мне надо протестить круд создания структуры и надо доделать круд упражнений
+Флоу генерации такой:
+1)Request придет тип тренировки например (upper body)
+2)Я получу по этому типу training group 
+  2.1) По training group я получу самый последний план
+  2.2) Дальше я получу последний accent (грудь + трицепс) например
+  2.3) По послденему accent найду все упражнения
+  2.4) Дальше перейду по следующим skills чтобы изменить (было сила - стало выносливость)
+  2.5)Соберу промпт из того что получил
+
+3)Отправлю промпт в модель 
+ 3.1) Внутри транзакции создам план тренировки, историю тренировок
+Нужно написать клиент в webUI для запросов в нейронку (Claude, ChatGPT)
+
+
+Надо разбить интерфейс
+// internal/usecase/contracts.go — рядом с теми, кто их использует
+
+type StructureRepo interface {
+	CreateStructure(context.Context, entity.TrainingStructure) error
+	UpdateStructure(context.Context, entity.TrainingStructure, uuid.UUID) error
+	DeleteStructure(context.Context, uuid.UUID) error
+	GetStructure(context.Context, uuid.UUID) (entity.TrainingStructure, error)
+}
+
+type ExerciseRepo interface {
+	CreateExercise(context.Context, entity.Exercise) (uuid.UUID, error)
+	UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error
+	DeleteExercise(context.Context, uuid.UUID) error
+	ListExercises(context.Context) ([]entity.Exercise, error)
+}
+
+type GroupRepo interface {
+	CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
+	ListGroups(context.Context) ([]entity.TrainingGroup, error)
+	UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
+	DeleteGroup(context.Context, uuid.UUID) error
+	GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
+}
+
+// тот, который реально нужен генератору — самый интересный
+type GenerationRepo interface {
+	GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
+	GetStructure(context.Context, uuid.UUID) (entity.TrainingStructure, error)
+	ListExercises(context.Context) ([]entity.Exercise, error)
+	RecentPlans(context.Context, uuid.UUID, int) ([]entity.TrainingPlan, error)
+	CreateTraining(context.Context) (uuid.UUID, error)
+	LinkExercises(context.Context, uuid.UUID, []uuid.UUID) error
+	StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
+}
