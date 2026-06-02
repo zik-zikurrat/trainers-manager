@@ -37,6 +37,7 @@ type (
 	}
 )
 type PlanGenerator interface {
+	CreatePrompt(ctx context.Context, trainType string, structureID uuid.UUID) (GeneratePrompt, error)
 	Generate(ctx context.Context, in GeneratePrompt) (GeneratedPlan, error)
 }
 

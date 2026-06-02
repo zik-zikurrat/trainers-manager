@@ -9,6 +9,7 @@ import (
 type TrainingPlan struct {
 	ID                  uuid.UUID
 	Plan                string
+	Status              string
 	TrainID             uuid.UUID
 	GroupID             uuid.UUID
 	Accent              string

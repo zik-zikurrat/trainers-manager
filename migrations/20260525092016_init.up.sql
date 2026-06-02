@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS training_group (
 CREATE TABLE IF NOT EXISTS training_plan (
     id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     plan                  TEXT,
+    status                VARCHAR(32),
     train_id              UUID NOT NULL REFERENCES training(id),
     group_id              UUID NOT NULL REFERENCES training_group(id),  
     training_structure_id UUID NOT NULL REFERENCES training_structure(id),

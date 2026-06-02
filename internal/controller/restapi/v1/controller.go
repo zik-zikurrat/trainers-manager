@@ -10,6 +10,7 @@ import (
 // V1 -.
 type V1 struct {
 	t usecase.Training
+	g usecase.PlanGenerator
 	l logger.Interface
 	v *validator.Validate
 }

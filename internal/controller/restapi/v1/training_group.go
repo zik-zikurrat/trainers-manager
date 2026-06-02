@@ -12,6 +12,15 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary     CreateGroup
+// @Description Create group
+// @ID          createGroup
+// @Tags  	    createGroup
+// @Accept      json
+// @Produce     json
+// @Success     201
+// @Failure     500 {object} response.Error
+// @Router      /training/group [post]
 func (r *V1) CreateGroup(ctx *fiber.Ctx) error {
 	var req request.TrainingGroup
 	if err := ctx.BodyParser(&req); err != nil {
@@ -39,6 +48,15 @@ func (r *V1) CreateGroup(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusCreated).JSON(map[string]string{"id": id.String()})
 }
 
+// @Summary     ListGroup
+// @Description List group
+// @ID          listGroup
+// @Tags  	    lsitGroup
+// @Accept      json
+// @Produce     json
+// @Success     200
+// @Failure     500 {object} response.Error
+// @Router      /training/group [get]
 func (r *V1) ListGroups(ctx *fiber.Ctx) error {
 	groups, err := r.t.ListGroups(ctx.UserContext())
 	if err != nil {
@@ -48,6 +66,15 @@ func (r *V1) ListGroups(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(groups)
 }
 
+// @Summary     UpdateGroup
+// @Description Update group
+// @ID          UpdateGroup
+// @Tags  	    updateGroup
+// @Accept      json
+// @Produce     json
+// @Success     200
+// @Failure     500 {object} response.Error
+// @Router      /training/group/:id [patch]
 func (r *V1) UpdateGroup(ctx *fiber.Ctx) error {
 	uuidID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
@@ -83,6 +110,15 @@ func (r *V1) UpdateGroup(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(map[string]string{"msg": "UPDATED"})
 }
 
+// @Summary     DeleteGroup
+// @Description Delete group
+// @ID          DeleteGroup
+// @Tags  	    deleteGroup
+// @Accept      json
+// @Produce     json
+// @Success     204
+// @Failure     500 {object} response.Error
+// @Router      /training/group/:id [delete]
 func (r *V1) DeleteGroup(ctx *fiber.Ctx) error {
 	uuidID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {

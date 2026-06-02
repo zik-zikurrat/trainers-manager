@@ -12,6 +12,15 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary     CreateExercise
+// @Description Create exercise
+// @ID          createExercise
+// @Tags  	    createExercise
+// @Accept      json
+// @Produce     json
+// @Success     201
+// @Failure     500 {object} response.Error
+// @Router      /training/exercise [post]
 func (r *V1) CreateExercise(ctx *fiber.Ctx) error {
 	var req request.Exercise
 	if err := ctx.BodyParser(&req); err != nil {
@@ -35,6 +44,15 @@ func (r *V1) CreateExercise(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusCreated).JSON(map[string]string{"id": id.String()})
 }
 
+// @Summary     ListExercise
+// @Description List exercise
+// @ID          listExercise
+// @Tags  	    listExercise
+// @Accept      json
+// @Produce     json
+// @Success     200
+// @Failure     500 {object} response.Error
+// @Router      /training/exercise [get]
 func (r *V1) ListExercises(ctx *fiber.Ctx) error {
 	exercises, err := r.t.ListExercises(ctx.UserContext())
 	if err != nil {
@@ -44,6 +62,15 @@ func (r *V1) ListExercises(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(exercises)
 }
 
+// @Summary     UpdateExercise
+// @Description Update exercise
+// @ID          updateExercise
+// @Tags  	    updateExercise
+// @Accept      json
+// @Produce     json
+// @Success     200
+// @Failure     500 {object} response.Error
+// @Router      /training/exercise/:id [patch]
 func (r *V1) UpdateExercise(ctx *fiber.Ctx) error {
 	uuidID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
@@ -76,6 +103,15 @@ func (r *V1) UpdateExercise(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(map[string]string{"msg": "UPDATED"})
 }
 
+// @Summary     DeleteExercise
+// @Description Delete exercise
+// @ID          deleteExercise
+// @Tags  	    deleteExercise
+// @Accept      json
+// @Produce     json
+// @Success     204
+// @Failure     500 {object} response.Error
+// @Router      /training/exercise/:id [delete]
 func (r *V1) DeleteExercise(ctx *fiber.Ctx) error {
 	uuidID, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
