@@ -47,6 +47,9 @@ var insertPlanHistoryQuery string
 //go:embed query/get_training_plan.sql
 var getTrainingPlanQuery string
 
+//go:embed query/list_training_plan.sql
+var listTrainingPlanQuery string
+
 //go:embed query/get_plan_history.sql
 var getPlanHistoryQuery string
 

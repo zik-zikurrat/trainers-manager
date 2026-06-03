@@ -27,3 +27,7 @@ func (us *UseCase) UpdateTrainingPlan(ctx context.Context, p entity.TrainingPlan
 func (us *UseCase) GetTrainingPlan(ctx context.Context, id uuid.UUID) (entity.TrainingPlan, error) {
 	return us.repo.GetTrainingPlan(ctx, id)
 }
+
+func (us *UseCase) ListTrainingPlan(ctx context.Context) ([]entity.TrainingPlan, error) {
+	return us.repo.ListTrainingPlan(ctx)
+}

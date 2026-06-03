@@ -28,6 +28,7 @@ type (
 		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
 		UpdateTrainingPlan(context.Context, entity.TrainingPlan, uuid.UUID) error
 		GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
+		ListTrainingPlan(context.Context) ([]entity.TrainingPlan, error)
 		GetPlanHistory(context.Context, uuid.UUID) ([]entity.TrainingPlanHistory, error)
 		// Groups
 		CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)

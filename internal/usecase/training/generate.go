@@ -44,6 +44,7 @@ func (us *UseCase) Generate(ctx context.Context, trainType string, structureID u
 	plan := entity.TrainingPlan{
 		Plan:                gen.PlanText,
 		TrainID:             trainID,
+		Status:              "ACTIVE",
 		GroupID:             group.ID,
 		Accent:              prompt.Accent,
 		Skills:              prompt.Skills,

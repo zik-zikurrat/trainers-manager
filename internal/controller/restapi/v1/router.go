@@ -30,6 +30,8 @@ func NewTrainingRoutes(apiV1Group fiber.Router, t usecase.Training, l logger.Int
 		trainingGroup.Get("/group", r.ListGroups)
 		trainingGroup.Patch("/group/:id", r.UpdateGroup)
 		trainingGroup.Delete("/group/:id", r.DeleteGroup)
+		// plan
+		trainingGroup.Get("/plan", r.ListPlan)
 		// generate
 		trainingGroup.Post("/generate", r.Generate)
 	}
