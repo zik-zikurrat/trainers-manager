@@ -125,7 +125,7 @@ func (g *Generator) Generate(ctx context.Context, prompt usecase.GeneratePrompt)
 
 	return usecase.GeneratedPlan{
 		ExerciseIDs: ids,
-		PlanText:    parsed.Plan,
+		PlanText:    cleanPlanText(parsed.Plan),
 	}, nil
 }
 

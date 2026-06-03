@@ -8,6 +8,7 @@ import (
 	"trainers-manager/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 // NewRouter -.
@@ -30,6 +31,7 @@ func NewRouter(app *fiber.App, cfg *config.Config, t usecase.Training, l logger.
 	apiV1Group := app.Group("/v1")
 	{
 		apiV1Group.Use(middleware.TracingMiddleware())
+		apiV1Group.Use(cors.New())
 		v1.NewTrainingRoutes(apiV1Group, t, l)
 	}
 }
