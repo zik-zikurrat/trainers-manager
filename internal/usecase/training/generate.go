@@ -5,14 +5,36 @@ import (
 	"fmt"
 
 	"trainers-manager/internal/entity"
+	"trainers-manager/internal/repo"
+	"trainers-manager/internal/repo/webapi"
 	"trainers-manager/internal/usecase"
+	"trainers-manager/pkg/logger"
 
 	"github.com/google/uuid"
 )
 
 const _limitPlans = 4
 
-func (us *UseCase) Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error) {
+type GenerateUseCase struct {
+	l                     *logger.Logger
+	r                     repo.GenerationRepo
+	generator             *webapi.Generator
+	exerciseRepo          repo.ExerciseRepo
+	trainingStructureRepo repo.TrainingStructureRepo
+	trainingGroupRepo     repo.TrainingGroupRepo
+	trainingRepo          repo.TrainingRepo
+	trainingPlanRepo      repo.TrainingPlanRepo
+}
+
+func NewGenerateUseCase(l *logger.Logger, r repo.GenerationRepo, exerciseRepo repo.ExerciseRepo) *GenerateUseCase {
+	return &GenerateUseCase{
+		l:            l,
+		r:            r,
+		exerciseRepo: exerciseRepo,
+	}
+}
+
+func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error) {
 	const op = "training.Generate"
 
 	prompt, group, err := us.buildPrompt(ctx, trainType, structureID)
@@ -20,24 +42,24 @@ func (us *UseCase) Generate(ctx context.Context, trainType string, structureID u
 		return entity.TrainingPlan{}, err
 	}
 
-	gen, err := us.gen.Generate(ctx, prompt)
+	gen, err := us.generator.Generate(ctx, prompt)
 	if err != nil {
-		us.log.Error("llm generate failed", err, op)
+		us.l.Error("llm generate failed", err, op)
 		return entity.TrainingPlan{}, err
 	}
 
 	validIDs, err := validateExerciseIDs(gen.ExerciseIDs, prompt.Pool)
 	if err != nil {
-		us.log.Error("llm returned invalid exercises", err, op)
+		us.l.Error("llm returned invalid exercises", err, op)
 		return entity.TrainingPlan{}, err
 	}
 
-	trainID, err := us.repo.CreateTraining(ctx)
+	trainID, err := us.trainingRepo.CreateTraining(ctx)
 	if err != nil {
-		us.log.Error("create training failed", err, op)
+		us.l.Error("create training failed", err, op)
 		return entity.TrainingPlan{}, err
 	}
-	if err := us.linkExercises(ctx, trainID, validIDs); err != nil {
+	if err := us.exerciseRepo.LinkExercises(ctx, trainID, validIDs); err != nil {
 		return entity.TrainingPlan{}, err
 	}
 
@@ -50,9 +72,9 @@ func (us *UseCase) Generate(ctx context.Context, trainType string, structureID u
 		Skills:              prompt.Skills,
 		TrainingStructureID: structureID,
 	}
-	planID, err := us.repo.StoreTrainingPlan(ctx, plan)
+	planID, err := us.trainingPlanRepo.StoreTrainingPlan(ctx, plan)
 	if err != nil {
-		us.log.Error("store plan failed", err, op)
+		us.l.Error("store plan failed", err, op)
 		return entity.TrainingPlan{}, err
 	}
 	plan.ID = planID
@@ -60,18 +82,18 @@ func (us *UseCase) Generate(ctx context.Context, trainType string, structureID u
 	return plan, nil
 }
 
-func (us *UseCase) buildPrompt(ctx context.Context, trainType string, structureID uuid.UUID) (usecase.GeneratePrompt, entity.TrainingGroup, error) {
+func (us *GenerateUseCase) buildPrompt(ctx context.Context, trainType string, structureID uuid.UUID) (usecase.GeneratePrompt, entity.TrainingGroup, error) {
 	const op = "training.buildPrompt"
 
-	group, err := us.repo.GetGroupByName(ctx, trainType)
+	group, err := us.trainingGroupRepo.GetGroupByName(ctx, trainType)
 	if err != nil {
-		us.log.Error("group lookup failed", err, op)
+		us.l.Error("group lookup failed", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
-	recent, err := us.repo.RecentPlans(ctx, group.ID, _limitPlans)
+	recent, err := us.r.RecentPlans(ctx, group.ID, _limitPlans)
 	if err != nil {
-		us.log.Error("recent plans failed", err, op)
+		us.l.Error("recent plans failed", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
@@ -83,15 +105,15 @@ func (us *UseCase) buildPrompt(ctx context.Context, trainType string, structureI
 	accent := nextInCycle(group.AccentCycle, lastAccent)
 	skills := nextInCycle(group.SkillCycle, lastSkills)
 
-	structure, err := us.repo.GetStructure(ctx, structureID)
+	structure, err := us.trainingStructureRepo.GetStructure(ctx, structureID)
 	if err != nil {
-		us.log.Error("structure lookup failed", err, op)
+		us.l.Error("structure lookup failed", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
-	pool, err := us.repo.ListExercises(ctx)
+	pool, err := us.exerciseRepo.ListExercises(ctx)
 	if err != nil {
-		us.log.Error("exercises pool failed", err, op)
+		us.l.Error("exercises pool failed", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
@@ -132,12 +154,4 @@ func nextInCycle(cycle []string, last string) string {
 		}
 	}
 	return cycle[0]
-}
-
-func (us *UseCase) linkExercises(ctx context.Context, trainingID uuid.UUID, exerciseIDs []uuid.UUID) error {
-	if err := us.repo.LinkExercises(ctx, trainingID, exerciseIDs); err != nil {
-		us.log.Error("Failed to link exercises", err, "training.linkExercises")
-		return err
-	}
-	return nil
 }

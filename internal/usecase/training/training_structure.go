@@ -3,57 +3,72 @@ package training
 import (
 	"context"
 	"trainers-manager/internal/entity"
+	"trainers-manager/internal/repo"
+	"trainers-manager/pkg/logger"
 
 	"github.com/google/uuid"
 )
 
+type StructureUseCase struct {
+	l *logger.Logger
+	r repo.TrainingStructureRepo
+}
+
+func NewStructureUseCase(r repo.TrainingStructureRepo, l *logger.Logger) *StructureUseCase {
+	return &StructureUseCase{
+		l: l,
+		r: r,
+	}
+
+}
+
 // CreateStructure -.
-func (us *UseCase) CreateStructure(ctx context.Context, structure entity.TrainingStructure) error {
+func (us *StructureUseCase) CreateStructure(ctx context.Context, structure entity.TrainingStructure) error {
 	const op = "training.CreateStructure"
-	if err := us.repo.CreateStructure(ctx, structure); err != nil {
-		us.log.Error("Failed to store structure", err, op)
+	if err := us.r.CreateStructure(ctx, structure); err != nil {
+		us.l.Error("Failed to store structure", err, op)
 		return err
 	}
 	return nil
 }
 
 // UpdateStructure -.
-func (us *UseCase) UpdateStructure(ctx context.Context, structure entity.TrainingStructure, id uuid.UUID) error {
+func (us *StructureUseCase) UpdateStructure(ctx context.Context, structure entity.TrainingStructure, id uuid.UUID) error {
 	const op = "training.UpdateStructure"
-	if err := us.repo.UpdateStructure(ctx, structure, id); err != nil {
-		us.log.Error("Failed to update structure", err, op)
+	if err := us.r.UpdateStructure(ctx, structure, id); err != nil {
+		us.l.Error("Failed to update structure", err, op)
 		return err
 	}
 	return nil
 }
 
 // DeleteStructure -.
-func (us *UseCase) DeleteStructure(ctx context.Context, id uuid.UUID) error {
-	const op = "training.UpdateStructure"
-	if err := us.repo.DeleteStructure(ctx, id); err != nil {
-		us.log.Error("Failed to delete structure", err, op)
+func (us *StructureUseCase) DeleteStructure(ctx context.Context, id uuid.UUID) error {
+	const op = "training.DeleteStructure"
+	if err := us.r.DeleteStructure(ctx, id); err != nil {
+		us.l.Error("Failed to delete structure", err, op)
 		return err
 	}
 	return nil
 }
 
 // GetStructure -.
-func (us *UseCase) GetStructure(ctx context.Context, id uuid.UUID) (entity.TrainingStructure, error) {
-	const op = "training.TrainingStructure"
-	structure, err := us.repo.GetStructure(ctx, id)
+func (us *StructureUseCase) GetStructure(ctx context.Context, id uuid.UUID) (entity.TrainingStructure, error) {
+	const op = "training.GetStructure"
+	structure, err := us.r.GetStructure(ctx, id)
 	if err != nil {
-		us.log.Error("Failed to get structure", err, op)
+		us.l.Error("Failed to get structure", err, op)
 		return entity.TrainingStructure{}, err
 	}
 	return structure, nil
 }
 
 // ListStructure -.
-func (us *UseCase) ListStructure(ctx context.Context) ([]entity.TrainingStructure, error) {
-	const op = "training.TrainingStructure"
-	structures, err := us.repo.ListStructure(ctx)
+func (us *StructureUseCase) ListStructure(ctx context.Context) ([]entity.TrainingStructure, error) {
+	const op = "training.ListStructure"
+	structures, err := us.r.ListStructure(ctx)
 	if err != nil {
-		us.log.Error("Failed to get structure", err, op)
+		us.l.Error("Failed to list structure", err, op)
 		return nil, err
 	}
 	return structures, nil

@@ -10,33 +10,39 @@ import (
 //go:generate mockgen -source=interfaces.go -destination=./mocks_training_test.go -package=usecase_test
 
 type (
-	// Training -.
-	Training interface {
-		// Structure
+	Structure interface {
 		CreateStructure(context.Context, entity.TrainingStructure) error
 		UpdateStructure(context.Context, entity.TrainingStructure, uuid.UUID) error
 		DeleteStructure(context.Context, uuid.UUID) error
 		GetStructure(context.Context, uuid.UUID) (entity.TrainingStructure, error)
 		ListStructure(context.Context) ([]entity.TrainingStructure, error)
-		// Exercises
+	}
+	Exercise interface {
 		CreateExercise(context.Context, entity.Exercise) (uuid.UUID, error)
 		UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error
 		DeleteExercise(context.Context, uuid.UUID) error
 		ListExercises(context.Context) ([]entity.Exercise, error)
-		// Training / Plan / History
+	}
+	Training interface {
 		CreateTraining(context.Context) (uuid.UUID, error)
+	}
+	TrainingPlan interface {
 		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
 		UpdateTrainingPlan(context.Context, entity.TrainingPlan, uuid.UUID) error
 		GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
 		ListTrainingPlan(context.Context) ([]entity.TrainingPlan, error)
+	}
+	PlanHistory interface {
 		GetPlanHistory(context.Context, uuid.UUID) ([]entity.TrainingPlanHistory, error)
-		// Groups
+	}
+	Group interface {
 		CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
 		ListGroups(context.Context) ([]entity.TrainingGroup, error)
 		UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
 		DeleteGroup(context.Context, uuid.UUID) error
 		GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
-		// Generate
+	}
+	Generate interface {
 		Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error)
 	}
 )

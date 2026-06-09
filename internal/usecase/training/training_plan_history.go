@@ -3,10 +3,30 @@ package training
 import (
 	"context"
 	"trainers-manager/internal/entity"
+	"trainers-manager/internal/repo"
+	"trainers-manager/pkg/logger"
 
 	"github.com/google/uuid"
 )
 
-func (us *UseCase) GetPlanHistory(ctx context.Context, planID uuid.UUID) ([]entity.TrainingPlanHistory, error) {
-	return us.repo.GetPlanHistory(ctx, planID)
+type PlanHistoryUseCase struct {
+	l *logger.Logger
+	r repo.PlanHistoryRepo
+}
+
+func NewPlanHistoryUseCase(r repo.PlanHistoryRepo, l *logger.Logger) *PlanHistoryUseCase {
+	return &PlanHistoryUseCase{
+		l: l,
+		r: r,
+	}
+}
+
+func (us *PlanHistoryUseCase) GetPlanHistory(ctx context.Context, planID uuid.UUID) ([]entity.TrainingPlanHistory, error) {
+	const op = "training.GetPlanHistory"
+	planHistory, err := us.r.GetPlanHistory(ctx, planID)
+	if err != nil {
+		us.l.Error("Failed to get plan history", err, op)
+		return nil, err
+	}
+	return planHistory, nil
 }

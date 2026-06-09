@@ -4,43 +4,67 @@ import (
 	"context"
 
 	"trainers-manager/internal/entity"
+	"trainers-manager/internal/repo"
+	"trainers-manager/pkg/logger"
 
 	"github.com/google/uuid"
 )
 
-func (us *UseCase) CreateGroup(ctx context.Context, g entity.TrainingGroup) (uuid.UUID, error) {
-	id, err := us.repo.CreateGroup(ctx, g)
+type TrainingGroupUseCase struct {
+	l *logger.Logger
+	r repo.TrainingGroupRepo
+}
+
+func NewTrainingGroupUseCase(l *logger.Logger, r repo.TrainingGroupRepo) *TrainingGroupUseCase {
+	return &TrainingGroupUseCase{
+		l: l,
+		r: r,
+	}
+}
+
+func (us *TrainingGroupUseCase) CreateGroup(ctx context.Context, g entity.TrainingGroup) (uuid.UUID, error) {
+	const op = "training.CreateGroup"
+	id, err := us.r.CreateGroup(ctx, g)
 	if err != nil {
-		us.log.Error("Failed to store group", err, "training.CreateGroup")
+		us.l.Error("Failed to store group", err, op)
 	}
 	return id, err
 }
 
-func (us *UseCase) ListGroups(ctx context.Context) ([]entity.TrainingGroup, error) {
-	groups, err := us.repo.ListGroups(ctx)
+func (us *TrainingGroupUseCase) ListGroups(ctx context.Context) ([]entity.TrainingGroup, error) {
+	const op = "training.ListGroups"
+	groups, err := us.r.ListGroups(ctx)
 	if err != nil {
-		us.log.Error("Failed to list groups", err, "training.ListGroups")
+		us.l.Error("Failed to list groups", err, op)
 		return nil, err
 	}
 	return groups, nil
 }
 
-func (us *UseCase) UpdateGroup(ctx context.Context, g entity.TrainingGroup, id uuid.UUID) error {
-	if err := us.repo.UpdateGroup(ctx, g, id); err != nil {
-		us.log.Error("Failed to update group", err, "training.UpdateGroup")
+func (us *TrainingGroupUseCase) UpdateGroup(ctx context.Context, g entity.TrainingGroup, id uuid.UUID) error {
+	const op = "training.UpdateGroup"
+	if err := us.r.UpdateGroup(ctx, g, id); err != nil {
+		us.l.Error("Failed to update group", err, op)
 		return err
 	}
 	return nil
 }
 
-func (us *UseCase) DeleteGroup(ctx context.Context, id uuid.UUID) error {
-	if err := us.repo.DeleteGroup(ctx, id); err != nil {
-		us.log.Error("Failed to delete group", err, "training.DeleteGroup")
+func (us *TrainingGroupUseCase) DeleteGroup(ctx context.Context, id uuid.UUID) error {
+	const op = "training.DeleteGroup"
+	if err := us.r.DeleteGroup(ctx, id); err != nil {
+		us.l.Error("Failed to delete group", err, op)
 		return err
 	}
 	return nil
 }
 
-func (us *UseCase) GetGroupByName(ctx context.Context, name string) (entity.TrainingGroup, error) {
-	return us.repo.GetGroupByName(ctx, name)
+func (us *TrainingGroupUseCase) GetGroupByName(ctx context.Context, name string) (entity.TrainingGroup, error) {
+	const op = "training.CreateGroup"
+	group, err := us.r.GetGroupByName(ctx, name)
+	if err != nil {
+		us.l.Error("Failed to get group by name", err, op)
+		return entity.TrainingGroup{}, err
+	}
+	return group, nil
 }
