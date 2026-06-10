@@ -16,7 +16,7 @@ type PlanUseCase struct {
 	r repo.TrainingPlanRepo
 }
 
-func NewPlanUseCase(r repo.TrainingPlanRepo, l *logger.Logger) *PlanUseCase {
+func NewPlanUseCase(l *logger.Logger, r repo.TrainingPlanRepo) *PlanUseCase {
 	return &PlanUseCase{
 		l: l,
 		r: r,

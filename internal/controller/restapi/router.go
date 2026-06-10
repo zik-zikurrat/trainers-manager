@@ -21,6 +21,7 @@ import (
 func NewRouter(
 	app *fiber.App,
 	cfg *config.Config,
+	l logger.Interface,
 	training usecase.Training,
 	exercise usecase.Exercise,
 	structure usecase.Structure,
@@ -28,7 +29,6 @@ func NewRouter(
 	planHistory usecase.PlanHistory,
 	group usecase.Group,
 	generator usecase.Generate,
-	l logger.Interface,
 ) {
 	// Options
 	// app.Use(middleware.Logger(l))

@@ -26,11 +26,10 @@ type GenerateUseCase struct {
 	trainingPlanRepo      repo.TrainingPlanRepo
 }
 
-func NewGenerateUseCase(l *logger.Logger, r repo.GenerationRepo, exerciseRepo repo.ExerciseRepo) *GenerateUseCase {
+func NewGenerateUseCase(l *logger.Logger, r repo.GenerationRepo) *GenerateUseCase {
 	return &GenerateUseCase{
-		l:            l,
-		r:            r,
-		exerciseRepo: exerciseRepo,
+		l: l,
+		r: r,
 	}
 }
 
@@ -59,7 +58,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 		us.l.Error("create training failed", err, op)
 		return entity.TrainingPlan{}, err
 	}
-	if err := us.exerciseRepo.LinkExercises(ctx, trainID, validIDs); err != nil {
+	if err := us.r.LinkExercises(ctx, trainID, validIDs); err != nil {
 		return entity.TrainingPlan{}, err
 	}
 
@@ -111,7 +110,7 @@ func (us *GenerateUseCase) buildPrompt(ctx context.Context, trainType string, st
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
-	pool, err := us.exerciseRepo.ListExercises(ctx)
+	pool, err := us.r.ListExercises(ctx)
 	if err != nil {
 		us.l.Error("exercises pool failed", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err

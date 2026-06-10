@@ -14,17 +14,17 @@ import (
 
 const _defaultEntityCap = 64
 
-// TrainingRepo -.
-type TrainingRepo struct {
+// StructureRepo -.
+type StructureRepo struct {
 	*postgres.Posgtres
 }
 
 // New -.
-func New(pg *postgres.Posgtres) *TrainingRepo {
-	return &TrainingRepo{pg}
+func NewStructureRepo(pg *postgres.Posgtres) *StructureRepo {
+	return &StructureRepo{pg}
 }
 
-func (r *TrainingRepo) CreateStructure(ctx context.Context, structure entity.TrainingStructure) error {
+func (r *StructureRepo) CreateStructure(ctx context.Context, structure entity.TrainingStructure) error {
 	_, err := r.Pool.Exec(ctx, insertTrainingStructureQuery, structure.Structure)
 	if err != nil {
 		return fmt.Errorf("insert training structure: %w", err)
@@ -32,7 +32,7 @@ func (r *TrainingRepo) CreateStructure(ctx context.Context, structure entity.Tra
 	return nil
 }
 
-func (r *TrainingRepo) UpdateStructure(ctx context.Context, structure entity.TrainingStructure, structureID uuid.UUID) error {
+func (r *StructureRepo) UpdateStructure(ctx context.Context, structure entity.TrainingStructure, structureID uuid.UUID) error {
 	ct, err := r.Pool.Exec(ctx, updateTrainingStructureQuery, structure.Structure, structureID)
 	if err != nil {
 		return fmt.Errorf("update training structure: %w", err)
@@ -43,7 +43,7 @@ func (r *TrainingRepo) UpdateStructure(ctx context.Context, structure entity.Tra
 	return nil
 }
 
-func (r *TrainingRepo) DeleteStructure(ctx context.Context, structureID uuid.UUID) error {
+func (r *StructureRepo) DeleteStructure(ctx context.Context, structureID uuid.UUID) error {
 	ct, err := r.Pool.Exec(ctx, deleteTrainingStructureQuery, structureID)
 	if err != nil {
 		return fmt.Errorf("delete training structure: %w", err)
@@ -54,7 +54,7 @@ func (r *TrainingRepo) DeleteStructure(ctx context.Context, structureID uuid.UUI
 	return nil
 }
 
-func (r *TrainingRepo) GetStructure(ctx context.Context, structureID uuid.UUID) (entity.TrainingStructure, error) {
+func (r *StructureRepo) GetStructure(ctx context.Context, structureID uuid.UUID) (entity.TrainingStructure, error) {
 	var s entity.TrainingStructure
 	err := r.Pool.QueryRow(ctx, getTrainingStructure, structureID).Scan(&s.ID, &s.Structure, &s.CreatedAt, &s.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
@@ -66,7 +66,7 @@ func (r *TrainingRepo) GetStructure(ctx context.Context, structureID uuid.UUID) 
 	return s, nil
 }
 
-func (r *TrainingRepo) ListStructure(ctx context.Context) ([]entity.TrainingStructure, error) {
+func (r *StructureRepo) ListStructure(ctx context.Context) ([]entity.TrainingStructure, error) {
 	rows, err := r.Pool.Query(ctx, listTrainingStructure)
 	if err != nil {
 		return nil, fmt.Errorf("list structures: %w", err)

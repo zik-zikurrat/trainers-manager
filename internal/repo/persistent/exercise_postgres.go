@@ -6,11 +6,21 @@ import (
 
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/pkg/postgres"
 
 	"github.com/google/uuid"
 )
 
-func (r *TrainingRepo) CreateExercise(ctx context.Context, e entity.Exercise) (uuid.UUID, error) {
+// ExerciseRepo -.
+type ExerciseRepo struct {
+	*postgres.Posgtres
+}
+
+// New -.
+func NewExerciseRepo(pg *postgres.Posgtres) *ExerciseRepo {
+	return &ExerciseRepo{pg}
+}
+func (r *ExerciseRepo) CreateExercise(ctx context.Context, e entity.Exercise) (uuid.UUID, error) {
 	var id uuid.UUID
 	err := r.Pool.QueryRow(ctx, insertExerciseQuery, e.Muscle, e.Description).Scan(&id)
 	if err != nil {
@@ -19,7 +29,7 @@ func (r *TrainingRepo) CreateExercise(ctx context.Context, e entity.Exercise) (u
 	return id, nil
 }
 
-func (r *TrainingRepo) ListExercises(ctx context.Context) ([]entity.Exercise, error) {
+func (r *ExerciseRepo) ListExercises(ctx context.Context) ([]entity.Exercise, error) {
 	rows, err := r.Pool.Query(ctx, listExercisesQuery)
 	if err != nil {
 		return nil, fmt.Errorf("list exercises: %w", err)
@@ -40,7 +50,7 @@ func (r *TrainingRepo) ListExercises(ctx context.Context) ([]entity.Exercise, er
 	return out, nil
 }
 
-func (r *TrainingRepo) UpdateExercise(ctx context.Context, e entity.Exercise, id uuid.UUID) error {
+func (r *ExerciseRepo) UpdateExercise(ctx context.Context, e entity.Exercise, id uuid.UUID) error {
 	ct, err := r.Pool.Exec(ctx, updateExerciseQuery, e.Muscle, e.Description, id)
 	if err != nil {
 		return fmt.Errorf("update exercise: %w", err)
@@ -51,22 +61,13 @@ func (r *TrainingRepo) UpdateExercise(ctx context.Context, e entity.Exercise, id
 	return nil
 }
 
-func (r *TrainingRepo) DeleteExercise(ctx context.Context, id uuid.UUID) error {
+func (r *ExerciseRepo) DeleteExercise(ctx context.Context, id uuid.UUID) error {
 	ct, err := r.Pool.Exec(ctx, deleteExerciseQuery, id)
 	if err != nil {
 		return fmt.Errorf("delete exercise: %w", err)
 	}
 	if ct.RowsAffected() == 0 {
 		return repo.ErrNotFound
-	}
-	return nil
-}
-func (r *TrainingRepo) LinkExercises(ctx context.Context, trainingID uuid.UUID, exerciseIDs []uuid.UUID) error {
-	if len(exerciseIDs) == 0 {
-		return nil
-	}
-	if _, err := r.Pool.Exec(ctx, linkExercisesQuery, trainingID, exerciseIDs); err != nil {
-		return fmt.Errorf("link exercises: %w", err)
 	}
 	return nil
 }

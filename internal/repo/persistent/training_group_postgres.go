@@ -7,6 +7,7 @@ import (
 
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/pkg/postgres"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -15,7 +16,17 @@ import (
 
 const uniqueViolation = "23505"
 
-func (r *TrainingRepo) CreateGroup(ctx context.Context, g entity.TrainingGroup) (uuid.UUID, error) {
+// GroupRepo -.
+type GroupRepo struct {
+	*postgres.Posgtres
+}
+
+// New -.
+func NewGroupRepo(pg *postgres.Posgtres) *GroupRepo {
+	return &GroupRepo{pg}
+}
+
+func (r *GroupRepo) CreateGroup(ctx context.Context, g entity.TrainingGroup) (uuid.UUID, error) {
 	var id uuid.UUID
 	err := r.Pool.QueryRow(ctx, insertTrainingGroupQuery, g.Name, g.AccentCycle, g.SkillCycle).Scan(&id)
 	if isUniqueViolation(err) {
@@ -27,7 +38,7 @@ func (r *TrainingRepo) CreateGroup(ctx context.Context, g entity.TrainingGroup) 
 	return id, nil
 }
 
-func (r *TrainingRepo) ListGroups(ctx context.Context) ([]entity.TrainingGroup, error) {
+func (r *GroupRepo) ListGroups(ctx context.Context) ([]entity.TrainingGroup, error) {
 	rows, err := r.Pool.Query(ctx, listTrainingGroupsQuery)
 	if err != nil {
 		return nil, fmt.Errorf("list training groups: %w", err)
@@ -45,7 +56,7 @@ func (r *TrainingRepo) ListGroups(ctx context.Context) ([]entity.TrainingGroup, 
 	return out, rows.Err()
 }
 
-func (r *TrainingRepo) UpdateGroup(ctx context.Context, g entity.TrainingGroup, id uuid.UUID) error {
+func (r *GroupRepo) UpdateGroup(ctx context.Context, g entity.TrainingGroup, id uuid.UUID) error {
 	ct, err := r.Pool.Exec(ctx, updateTrainingGroupQuery, g.Name, g.AccentCycle, g.SkillCycle, id)
 	if isUniqueViolation(err) {
 		return repo.ErrAlreadyExists
@@ -59,7 +70,7 @@ func (r *TrainingRepo) UpdateGroup(ctx context.Context, g entity.TrainingGroup, 
 	return nil
 }
 
-func (r *TrainingRepo) DeleteGroup(ctx context.Context, id uuid.UUID) error {
+func (r *GroupRepo) DeleteGroup(ctx context.Context, id uuid.UUID) error {
 	ct, err := r.Pool.Exec(ctx, deleteTrainingGroupQuery, id)
 	if err != nil {
 		return fmt.Errorf("delete training group: %w", err)
@@ -70,7 +81,7 @@ func (r *TrainingRepo) DeleteGroup(ctx context.Context, id uuid.UUID) error {
 	return nil
 }
 
-func (r *TrainingRepo) GetGroupByName(ctx context.Context, name string) (entity.TrainingGroup, error) {
+func (r *GroupRepo) GetGroupByName(ctx context.Context, name string) (entity.TrainingGroup, error) {
 	var g entity.TrainingGroup
 	err := r.Pool.QueryRow(ctx, getTrainingGroupByNameQuery, name).
 		Scan(&g.ID, &g.Name, &g.AccentCycle, &g.SkillCycle)

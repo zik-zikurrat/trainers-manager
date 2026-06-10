@@ -60,11 +60,3 @@ func (us *ExerciseUseCase) DeleteExercise(ctx context.Context, id uuid.UUID) err
 	}
 	return nil
 }
-func (us *ExerciseUseCase) LinkExercises(ctx context.Context, trainingID uuid.UUID, exerciseIDs []uuid.UUID) error {
-	const op = "training.LinkExercises"
-	if err := us.r.LinkExercises(ctx, trainingID, exerciseIDs); err != nil {
-		us.l.Error("Failed to link exercises", err, op)
-		return err
-	}
-	return nil
-}

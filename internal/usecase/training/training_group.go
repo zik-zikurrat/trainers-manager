@@ -15,7 +15,7 @@ type TrainingGroupUseCase struct {
 	r repo.TrainingGroupRepo
 }
 
-func NewTrainingGroupUseCase(l *logger.Logger, r repo.TrainingGroupRepo) *TrainingGroupUseCase {
+func NewGroupUseCase(l *logger.Logger, r repo.TrainingGroupRepo) *TrainingGroupUseCase {
 	return &TrainingGroupUseCase{
 		l: l,
 		r: r,

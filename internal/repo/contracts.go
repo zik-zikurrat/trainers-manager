@@ -24,7 +24,6 @@ type (
 		UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error
 		DeleteExercise(context.Context, uuid.UUID) error
 		ListExercises(context.Context) ([]entity.Exercise, error)
-		LinkExercises(context.Context, uuid.UUID, []uuid.UUID) error
 	}
 	TrainingRepo interface {
 		CreateTraining(context.Context) (uuid.UUID, error)

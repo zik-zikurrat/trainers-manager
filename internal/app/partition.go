@@ -7,7 +7,7 @@ import (
 	"trainers-manager/pkg/logger"
 )
 
-func StartPartitionMaintainer(ctx context.Context, r repo.TrainingRepo, l logger.Interface) {
+func StartPartitionMaintainer(ctx context.Context, r repo.PartitionsRepo, l logger.Interface) {
 	const interval = 24 * time.Hour
 
 	ensure := func() {

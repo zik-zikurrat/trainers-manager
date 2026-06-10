@@ -14,7 +14,7 @@ type PlanHistoryUseCase struct {
 	r repo.PlanHistoryRepo
 }
 
-func NewPlanHistoryUseCase(r repo.PlanHistoryRepo, l *logger.Logger) *PlanHistoryUseCase {
+func NewPlanHistoryUseCase(l *logger.Logger, r repo.PlanHistoryRepo) *PlanHistoryUseCase {
 	return &PlanHistoryUseCase{
 		l: l,
 		r: r,

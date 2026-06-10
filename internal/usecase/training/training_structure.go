@@ -14,7 +14,7 @@ type StructureUseCase struct {
 	r repo.TrainingStructureRepo
 }
 
-func NewStructureUseCase(r repo.TrainingStructureRepo, l *logger.Logger) *StructureUseCase {
+func NewStructureUseCase(l *logger.Logger, r repo.TrainingStructureRepo) *StructureUseCase {
 	return &StructureUseCase{
 		l: l,
 		r: r,

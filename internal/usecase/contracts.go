@@ -58,7 +58,7 @@ type GeneratePrompt struct {
 	Pool      []entity.Exercise
 }
 
-// GeneratedPlan — что вернула LLM (после парсинга JSON).
+// GeneratedPlan - что вернула LLM (после парсинга JSON).
 type GeneratedPlan struct {
 	ExerciseIDs []uuid.UUID
 	PlanText    string

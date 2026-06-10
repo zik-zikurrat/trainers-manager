@@ -9,7 +9,6 @@ import (
 	"trainers-manager/internal/config"
 	"trainers-manager/internal/controller/restapi"
 	"trainers-manager/internal/repo/persistent"
-	"trainers-manager/internal/repo/webapi"
 	"trainers-manager/internal/usecase/training"
 	"trainers-manager/pkg/httpserver"
 	"trainers-manager/pkg/logger"
@@ -30,12 +29,41 @@ func Run(cfg *config.Config) error {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	trainingRepo := persistent.New(pg)
-	trainingUseCase := training.New(trainingRepo, webapi.New(cfg), l)
-	StartPartitionMaintainer(ctx, trainingRepo, l)
+	// Repository
+	exerciseRepo := persistent.NewExerciseRepo(pg)
+	trainingRepo := persistent.NewTrainingRepo(pg)
+	structureRepo := persistent.NewStructureRepo(pg)
+	groupRepo := persistent.NewGroupRepo(pg)
+	partitionsRepo := persistent.NewPartitionRepo(pg)
+	planHistoryRepo := persistent.NewPlanHistoryRepo(pg)
+	planRepo := persistent.NewPlanRepo(pg)
+	generatorRepo := persistent.NewGeneratorRepo(pg)
+
+	// UseCase
+	exerciseUseCase := training.NewExerciseUseCase(l, exerciseRepo)
+	structureUseCase := training.NewStructureUseCase(l, structureRepo)
+	planUseCase := training.NewPlanUseCase(l, planRepo)
+	trainingUseCase := training.NewTrainingUseCase(l, trainingRepo)
+	planHistoryUseCase := training.NewPlanHistoryUseCase(l, planHistoryRepo)
+	generateUseCase := training.NewGenerateUseCase(l, generatorRepo)
+	groupUseCase := training.NewGroupUseCase(l, groupRepo)
+
+	// Partition
+	StartPartitionMaintainer(ctx, partitionsRepo, l)
 
 	httpserver := httpserver.New(ctx, l, cfg)
-	restapi.NewRouter(httpserver.App, cfg, trainingUseCase, l)
+	restapi.NewRouter(
+		httpserver.App,
+		cfg,
+		l,
+		trainingUseCase,
+		exerciseUseCase,
+		structureUseCase,
+		planUseCase,
+		planHistoryUseCase,
+		groupUseCase,
+		generateUseCase,
+	)
 	httpserver.Start()
 
 	select {
