@@ -36,7 +36,7 @@ func (r *V1) Generate(c *fiber.Ctx) error {
 		}()
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 		defer cancel()
-		if _, err := r.t.Generate(ctx, req.TrainType, req.StructureID); err != nil {
+		if _, err := r.generator.Generate(ctx, req.TrainType, req.StructureID); err != nil {
 			r.l.Error(err, "background generate failed")
 		}
 	}()

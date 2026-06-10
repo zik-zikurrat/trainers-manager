@@ -32,7 +32,7 @@ func (r *V1) CreateExercise(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
 
-	id, err := r.t.CreateExercise(ctx.UserContext(), entity.Exercise{
+	id, err := r.exercise.CreateExercise(ctx.UserContext(), entity.Exercise{
 		Muscle:      req.Muscle,
 		Description: req.Description,
 	})
@@ -54,7 +54,7 @@ func (r *V1) CreateExercise(ctx *fiber.Ctx) error {
 // @Failure     500 {object} response.Error
 // @Router      /training/exercise [get]
 func (r *V1) ListExercises(ctx *fiber.Ctx) error {
-	exercises, err := r.t.ListExercises(ctx.UserContext())
+	exercises, err := r.exercise.ListExercises(ctx.UserContext())
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - exercise")
 		return errorResponse(ctx, http.StatusInternalServerError, "Exercise service error")
@@ -88,7 +88,7 @@ func (r *V1) UpdateExercise(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
 
-	err = r.t.UpdateExercise(ctx.UserContext(), entity.Exercise{
+	err = r.exercise.UpdateExercise(ctx.UserContext(), entity.Exercise{
 		Muscle:      req.Muscle,
 		Description: req.Description,
 	}, uuidID)
@@ -119,7 +119,7 @@ func (r *V1) DeleteExercise(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid id")
 	}
 
-	err = r.t.DeleteExercise(ctx.UserContext(), uuidID)
+	err = r.exercise.DeleteExercise(ctx.UserContext(), uuidID)
 	switch {
 	case errors.Is(err, repo.ErrNotFound):
 		return errorResponse(ctx, http.StatusNotFound, "Exercise not found")

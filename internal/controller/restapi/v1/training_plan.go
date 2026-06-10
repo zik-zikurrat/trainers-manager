@@ -18,7 +18,7 @@ import (
 // @Failure     500 {object} response.Error
 // @Router      /training/plan [get]
 func (r *V1) ListPlan(ctx *fiber.Ctx) error {
-	plans, err := r.t.ListTrainingPlan(ctx.UserContext())
+	plans, err := r.plan.ListTrainingPlan(ctx.UserContext())
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - plan")
 		return errorResponse(ctx, http.StatusInternalServerError, "Error while getting plan")

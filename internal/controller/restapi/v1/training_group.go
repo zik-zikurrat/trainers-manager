@@ -32,7 +32,7 @@ func (r *V1) CreateGroup(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
 
-	id, err := r.t.CreateGroup(ctx.UserContext(), entity.TrainingGroup{
+	id, err := r.group.CreateGroup(ctx.UserContext(), entity.TrainingGroup{
 		Name:        req.Name,
 		AccentCycle: req.AccentCycle,
 		SkillCycle:  req.SkillCycle,
@@ -58,7 +58,7 @@ func (r *V1) CreateGroup(ctx *fiber.Ctx) error {
 // @Failure     500 {object} response.Error
 // @Router      /training/group [get]
 func (r *V1) ListGroups(ctx *fiber.Ctx) error {
-	groups, err := r.t.ListGroups(ctx.UserContext())
+	groups, err := r.group.ListGroups(ctx.UserContext())
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - group")
 		return errorResponse(ctx, http.StatusInternalServerError, "Group service error")
@@ -92,7 +92,7 @@ func (r *V1) UpdateGroup(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
 
-	err = r.t.UpdateGroup(ctx.UserContext(), entity.TrainingGroup{
+	err = r.group.UpdateGroup(ctx.UserContext(), entity.TrainingGroup{
 		Name:        req.Name,
 		AccentCycle: req.AccentCycle,
 		SkillCycle:  req.SkillCycle,
@@ -126,7 +126,7 @@ func (r *V1) DeleteGroup(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid id")
 	}
 
-	err = r.t.DeleteGroup(ctx.UserContext(), uuidID)
+	err = r.group.DeleteGroup(ctx.UserContext(), uuidID)
 	switch {
 	case errors.Is(err, repo.ErrNotFound):
 		return errorResponse(ctx, http.StatusNotFound, "Group not found")

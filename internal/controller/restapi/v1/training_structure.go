@@ -33,7 +33,7 @@ func (r *V1) CreateStructure(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
 
-	if err := r.t.CreateStructure(
+	if err := r.structure.CreateStructure(
 		ctx.UserContext(),
 		entity.TrainingStructure{
 			Structure: req.Structure,
@@ -82,7 +82,7 @@ func (r *V1) UpdateStructure(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
 
-	if err := r.t.UpdateStructure(
+	if err := r.structure.UpdateStructure(
 		ctx.UserContext(),
 		entity.TrainingStructure{
 			Structure: req.Structure,
@@ -114,7 +114,7 @@ func (r *V1) DeleteStructure(ctx *fiber.Ctx) error {
 		r.l.Error(err, "restapi - v1 - structure")
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid id")
 	}
-	if err := r.t.DeleteStructure(ctx.UserContext(), uuidID); err != nil {
+	if err := r.structure.DeleteStructure(ctx.UserContext(), uuidID); err != nil {
 		r.l.Error(err, "restapi - v1 - structure")
 		return errorResponse(ctx, http.StatusInternalServerError, "Structure service error")
 	}
@@ -136,7 +136,7 @@ func (r *V1) GetStructure(ctx *fiber.Ctx) error {
 		r.l.Error(err, "restapi - v1 - structure")
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid id")
 	}
-	structure, err := r.t.GetStructure(ctx.UserContext(), uuidID)
+	structure, err := r.structure.GetStructure(ctx.UserContext(), uuidID)
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - structure")
 		return errorResponse(ctx, http.StatusInternalServerError, "Error while getting structure")
@@ -155,7 +155,7 @@ func (r *V1) GetStructure(ctx *fiber.Ctx) error {
 // @Failure     500 {object} response.Error
 // @Router      /training/structure [get]
 func (r *V1) ListStructure(ctx *fiber.Ctx) error {
-	structures, err := r.t.ListStructure(ctx.UserContext())
+	structures, err := r.structure.ListStructure(ctx.UserContext())
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - structure")
 		return errorResponse(ctx, http.StatusInternalServerError, "Error while getting structure")

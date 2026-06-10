@@ -8,9 +8,28 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func NewTrainingRoutes(apiV1Group fiber.Router, t usecase.Training, l logger.Interface) {
-	r := &V1{t: t, l: l, v: validator.New(validator.WithRequiredStructEnabled())}
-
+func NewTrainingRoutes(
+	apiV1Group fiber.Router,
+	training usecase.Training,
+	exercise usecase.Exercise,
+	structure usecase.Structure,
+	plan usecase.Plan,
+	planHistory usecase.PlanHistory,
+	group usecase.Group,
+	generator usecase.Generate,
+	l logger.Interface,
+) {
+	r := &V1{
+		training:    training,
+		exercise:    exercise,
+		structure:   structure,
+		plan:        plan,
+		planHistory: planHistory,
+		group:       group,
+		generator:   generator,
+		l:           l,
+		v:           validator.New(validator.WithRequiredStructEnabled()),
+	}
 	trainingGroup := apiV1Group.Group("/training")
 
 	{

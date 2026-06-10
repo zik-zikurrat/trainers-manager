@@ -26,7 +26,7 @@ type (
 	Training interface {
 		CreateTraining(context.Context) (uuid.UUID, error)
 	}
-	TrainingPlan interface {
+	Plan interface {
 		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
 		UpdateTrainingPlan(context.Context, entity.TrainingPlan, uuid.UUID) error
 		GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)

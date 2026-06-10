@@ -9,7 +9,14 @@ import (
 
 // V1 -.
 type V1 struct {
-	t usecase.Training
+	training    usecase.Training
+	exercise    usecase.Exercise
+	structure   usecase.Structure
+	plan        usecase.Plan
+	planHistory usecase.PlanHistory
+	group       usecase.Group
+	generator   usecase.Generate
+
 	l logger.Interface
 	v *validator.Validate
 }

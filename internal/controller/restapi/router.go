@@ -18,13 +18,23 @@ import (
 // @version     1.0
 // @host        localhost:3033
 // @BasePath    /v1
-func NewRouter(app *fiber.App, cfg *config.Config, t usecase.Training, l logger.Interface) {
+func NewRouter(
+	app *fiber.App,
+	cfg *config.Config,
+	training usecase.Training,
+	exercise usecase.Exercise,
+	structure usecase.Structure,
+	plan usecase.Plan,
+	planHistory usecase.PlanHistory,
+	group usecase.Group,
+	generator usecase.Generate,
+	l logger.Interface,
+) {
 	// Options
 	// app.Use(middleware.Logger(l))
 	// app.Use(middleware.Recovery(l))
 
 	// Prometheus metrics TODO
-
 	// Swagger TODO
 	// app.Get("/swagger/*", swagger.HandlerDefault)
 
@@ -32,6 +42,16 @@ func NewRouter(app *fiber.App, cfg *config.Config, t usecase.Training, l logger.
 	{
 		apiV1Group.Use(middleware.TracingMiddleware())
 		apiV1Group.Use(cors.New())
-		v1.NewTrainingRoutes(apiV1Group, t, l)
+		v1.NewTrainingRoutes(
+			apiV1Group,
+			training,
+			exercise,
+			structure,
+			plan,
+			planHistory,
+			group,
+			generator,
+			l,
+		)
 	}
 }
