@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=interfaces.go -destination=./mocks_training_test.go -package=usecase_test
+//go:generate mockgen -source=contracts.go -destination=mocks/mocks.go -package=mocks
 
 type (
 	Structure interface {

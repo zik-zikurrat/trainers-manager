@@ -12,6 +12,8 @@ import (
 var ErrNotFound = errors.New("not found")
 var ErrAlreadyExists = errors.New("already exists")
 
+//go:generate mockgen -source=contracts.go -destination=mocks/mocks.go -package=mocks
+
 type (
 	TrainingStructureRepo interface {
 		CreateStructure(context.Context, entity.TrainingStructure) error
