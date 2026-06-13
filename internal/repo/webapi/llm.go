@@ -28,6 +28,8 @@ func New(cfg *config.Config) *Generator {
 	}
 }
 
+var _ usecase.PlanGenerator = (*Generator)(nil)
+
 type chatRequest struct {
 	Model          string        `json:"model"`
 	Messages       []chatMessage `json:"messages"`

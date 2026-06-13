@@ -3,7 +3,6 @@ package training
 import (
 	"context"
 	"fmt"
-
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
 	"trainers-manager/internal/usecase"
@@ -15,36 +14,13 @@ import (
 const _limitPlans = 4
 
 type GenerateUseCase struct {
-	l                     *logger.Logger
-	r                     repo.GenerationRepo
-	planGenerator         usecase.PlanGenerator
-	exerciseRepo          repo.ExerciseRepo
-	trainingStructureRepo repo.TrainingStructureRepo
-	trainingGroupRepo     repo.TrainingGroupRepo
-	trainingRepo          repo.TrainingRepo
-	trainingPlanRepo      repo.TrainingPlanRepo
+	l   *logger.Logger
+	r   repo.GenerationRepo
+	gen usecase.PlanGenerator
 }
 
-func NewGenerateUseCase(
-	l *logger.Logger,
-	r repo.GenerationRepo,
-	generator usecase.PlanGenerator,
-	exerciseRepo repo.ExerciseRepo,
-	trainingStructureRepo repo.TrainingStructureRepo,
-	trainingGroupRepo repo.TrainingGroupRepo,
-	trainingRepo repo.TrainingRepo,
-	trainingPlanRepo repo.TrainingPlanRepo,
-) *GenerateUseCase {
-	return &GenerateUseCase{
-		l:                     l,
-		r:                     r,
-		planGenerator:         generator,
-		exerciseRepo:          exerciseRepo,
-		trainingStructureRepo: trainingStructureRepo,
-		trainingGroupRepo:     trainingGroupRepo,
-		trainingRepo:          trainingRepo,
-		trainingPlanRepo:      trainingPlanRepo,
-	}
+func NewGenerateUseCase(l *logger.Logger, r repo.GenerationRepo, gen usecase.PlanGenerator) *GenerateUseCase {
+	return &GenerateUseCase{l: l, r: r, gen: gen}
 }
 
 func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error) {
@@ -55,7 +31,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 		return entity.TrainingPlan{}, err
 	}
 
-	gen, err := us.planGenerator.Generate(ctx, prompt)
+	gen, err := us.gen.Generate(ctx, prompt)
 	if err != nil {
 		us.l.Error("llm generate failed", err, op)
 		return entity.TrainingPlan{}, err
@@ -67,7 +43,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 		return entity.TrainingPlan{}, err
 	}
 
-	trainID, err := us.trainingRepo.CreateTraining(ctx)
+	trainID, err := us.r.CreateTraining(ctx)
 	if err != nil {
 		us.l.Error("create training failed", err, op)
 		return entity.TrainingPlan{}, err
@@ -85,20 +61,19 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 		Skills:              prompt.Skills,
 		TrainingStructureID: structureID,
 	}
-	planID, err := us.trainingPlanRepo.StoreTrainingPlan(ctx, plan)
+	planID, err := us.r.StoreTrainingPlan(ctx, plan)
 	if err != nil {
 		us.l.Error("store plan failed", err, op)
 		return entity.TrainingPlan{}, err
 	}
 	plan.ID = planID
-
 	return plan, nil
 }
 
 func (us *GenerateUseCase) buildPrompt(ctx context.Context, trainType string, structureID uuid.UUID) (usecase.GeneratePrompt, entity.TrainingGroup, error) {
 	const op = "training.buildPrompt"
 
-	group, err := us.trainingGroupRepo.GetGroupByName(ctx, trainType)
+	group, err := us.r.GetGroupByName(ctx, trainType)
 	if err != nil {
 		us.l.Error("group lookup failed", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
@@ -118,7 +93,7 @@ func (us *GenerateUseCase) buildPrompt(ctx context.Context, trainType string, st
 	accent := nextInCycle(group.AccentCycle, lastAccent)
 	skills := nextInCycle(group.SkillCycle, lastSkills)
 
-	structure, err := us.trainingStructureRepo.GetStructure(ctx, structureID)
+	structure, err := us.r.GetStructure(ctx, structureID)
 	if err != nil {
 		us.l.Error("structure lookup failed", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err

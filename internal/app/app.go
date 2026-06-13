@@ -9,6 +9,7 @@ import (
 	"trainers-manager/internal/config"
 	"trainers-manager/internal/controller/restapi"
 	"trainers-manager/internal/repo/persistent"
+	"trainers-manager/internal/repo/webapi"
 	"trainers-manager/internal/usecase/training"
 	"trainers-manager/pkg/httpserver"
 	"trainers-manager/pkg/logger"
@@ -37,15 +38,15 @@ func Run(cfg *config.Config) error {
 	partitionsRepo := persistent.NewPartitionRepo(pg)
 	planHistoryRepo := persistent.NewPlanHistoryRepo(pg)
 	planRepo := persistent.NewPlanRepo(pg)
-	generatorRepo := persistent.NewGeneratorRepo(pg)
-
+	generationRepo := persistent.NewGeneratorRepo(pg) // строка 41
+	gen := webapi.New(cfg)                            // *webapi.Generator реализует usecase.PlanGenerator
 	// UseCase
 	exerciseUseCase := training.NewExerciseUseCase(l, exerciseRepo)
 	structureUseCase := training.NewStructureUseCase(l, structureRepo)
 	planUseCase := training.NewPlanUseCase(l, planRepo)
 	trainingUseCase := training.NewTrainingUseCase(l, trainingRepo)
 	planHistoryUseCase := training.NewPlanHistoryUseCase(l, planHistoryRepo)
-	generateUseCase := training.NewGenerateUseCase(l, generatorRepo)
+	generateUseCase := training.NewGenerateUseCase(l, generationRepo, gen)
 	groupUseCase := training.NewGroupUseCase(l, groupRepo)
 
 	// Partition
