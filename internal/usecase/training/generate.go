@@ -6,7 +6,6 @@ import (
 
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
-	"trainers-manager/internal/repo/webapi"
 	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/logger"
 
@@ -18,7 +17,7 @@ const _limitPlans = 4
 type GenerateUseCase struct {
 	l                     *logger.Logger
 	r                     repo.GenerationRepo
-	generator             *webapi.Generator
+	planGenerator         usecase.PlanGenerator
 	exerciseRepo          repo.ExerciseRepo
 	trainingStructureRepo repo.TrainingStructureRepo
 	trainingGroupRepo     repo.TrainingGroupRepo
@@ -26,10 +25,25 @@ type GenerateUseCase struct {
 	trainingPlanRepo      repo.TrainingPlanRepo
 }
 
-func NewGenerateUseCase(l *logger.Logger, r repo.GenerationRepo) *GenerateUseCase {
+func NewGenerateUseCase(
+	l *logger.Logger,
+	r repo.GenerationRepo,
+	generator usecase.PlanGenerator,
+	exerciseRepo repo.ExerciseRepo,
+	trainingStructureRepo repo.TrainingStructureRepo,
+	trainingGroupRepo repo.TrainingGroupRepo,
+	trainingRepo repo.TrainingRepo,
+	trainingPlanRepo repo.TrainingPlanRepo,
+) *GenerateUseCase {
 	return &GenerateUseCase{
-		l: l,
-		r: r,
+		l:                     l,
+		r:                     r,
+		planGenerator:         generator,
+		exerciseRepo:          exerciseRepo,
+		trainingStructureRepo: trainingStructureRepo,
+		trainingGroupRepo:     trainingGroupRepo,
+		trainingRepo:          trainingRepo,
+		trainingPlanRepo:      trainingPlanRepo,
 	}
 }
 
@@ -41,7 +55,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 		return entity.TrainingPlan{}, err
 	}
 
-	gen, err := us.generator.Generate(ctx, prompt)
+	gen, err := us.planGenerator.Generate(ctx, prompt)
 	if err != nil {
 		us.l.Error("llm generate failed", err, op)
 		return entity.TrainingPlan{}, err

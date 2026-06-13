@@ -46,10 +46,10 @@ type (
 	Generate interface {
 		Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error)
 	}
+	PlanGenerator interface {
+		Generate(ctx context.Context, in GeneratePrompt) (GeneratedPlan, error)
+	}
 )
-type PlanGenerator interface {
-	Generate(ctx context.Context, in GeneratePrompt) (GeneratedPlan, error)
-}
 
 type GeneratePrompt struct {
 	Structure string
