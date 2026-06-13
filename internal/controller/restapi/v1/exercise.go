@@ -35,6 +35,7 @@ func (r *V1) CreateExercise(ctx *fiber.Ctx) error {
 	id, err := r.exercise.CreateExercise(ctx.UserContext(), entity.Exercise{
 		Muscle:      req.Muscle,
 		Description: req.Description,
+		Position:    req.Position,
 	})
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - exercise")
@@ -91,6 +92,7 @@ func (r *V1) UpdateExercise(ctx *fiber.Ctx) error {
 	err = r.exercise.UpdateExercise(ctx.UserContext(), entity.Exercise{
 		Muscle:      req.Muscle,
 		Description: req.Description,
+		Position:    req.Position,
 	}, uuidID)
 	switch {
 	case errors.Is(err, repo.ErrNotFound):
