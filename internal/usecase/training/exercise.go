@@ -5,6 +5,7 @@ import (
 
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/internal/usecase/dto"
 	"trainers-manager/pkg/logger"
 
 	"github.com/google/uuid"
@@ -43,7 +44,7 @@ func (us *ExerciseUseCase) ListExercises(ctx context.Context) ([]entity.Exercise
 	return exercises, nil
 }
 
-func (us *ExerciseUseCase) UpdateExercise(ctx context.Context, e entity.Exercise, id uuid.UUID) error {
+func (us *ExerciseUseCase) UpdateExercise(ctx context.Context, e dto.UpdateExerciseInput, id uuid.UUID) error {
 	const op = "training.UpdateExercise"
 	if err := us.r.UpdateExercise(ctx, e, id); err != nil {
 		us.l.Error("Failed to update exercise", err, op)

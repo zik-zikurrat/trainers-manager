@@ -1,6 +1,7 @@
 UPDATE exercises
-SET muscle = $1,
-    description  = $2,
-    position = $3,
+SET
+    muscle = COALESCE($1, muscle),
+    position = COALESCE($2, position),
+    description = COALESCE($3, description),
     updated_at   = NOW()
 WHERE id = $4;

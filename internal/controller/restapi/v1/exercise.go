@@ -7,6 +7,7 @@ import (
 	"trainers-manager/internal/controller/restapi/v1/request"
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/internal/usecase/dto"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -79,7 +80,7 @@ func (r *V1) UpdateExercise(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid id")
 	}
 
-	var req request.Exercise
+	var req request.UpdateExercise
 	if err := ctx.BodyParser(&req); err != nil {
 		r.l.Error(err, "restapi - v1 - exercise")
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
@@ -89,11 +90,14 @@ func (r *V1) UpdateExercise(ctx *fiber.Ctx) error {
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
 
-	err = r.exercise.UpdateExercise(ctx.UserContext(), entity.Exercise{
+	input := dto.UpdateExerciseInput{
+		ID:          uuidID,
 		Muscle:      req.Muscle,
-		Description: req.Description,
 		Position:    req.Position,
-	}, uuidID)
+		Description: req.Description,
+	}
+
+	err = r.exercise.UpdateExercise(ctx.UserContext(), input, uuidID)
 	switch {
 	case errors.Is(err, repo.ErrNotFound):
 		return errorResponse(ctx, http.StatusNotFound, "Exercise not found")

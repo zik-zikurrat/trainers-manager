@@ -6,6 +6,7 @@ import (
 
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/internal/usecase/dto"
 	"trainers-manager/pkg/postgres"
 
 	"github.com/google/uuid"
@@ -39,7 +40,7 @@ func (r *ExerciseRepo) ListExercises(ctx context.Context) ([]entity.Exercise, er
 	out := make([]entity.Exercise, 0, _defaultEntityCap)
 	for rows.Next() {
 		var e entity.Exercise
-		if err := rows.Scan(&e.ID, &e.Muscle, &e.Description, &e.CreatedAt, &e.UpdatedAt); err != nil {
+		if err := rows.Scan(&e.ID, &e.Muscle, &e.Description, &e.Position, &e.CreatedAt, &e.UpdatedAt); err != nil {
 			return nil, fmt.Errorf("list exercises scan: %w", err)
 		}
 		out = append(out, e)
@@ -50,8 +51,8 @@ func (r *ExerciseRepo) ListExercises(ctx context.Context) ([]entity.Exercise, er
 	return out, nil
 }
 
-func (r *ExerciseRepo) UpdateExercise(ctx context.Context, e entity.Exercise, id uuid.UUID) error {
-	ct, err := r.Pool.Exec(ctx, updateExerciseQuery, e.Muscle, e.Description, id)
+func (r *ExerciseRepo) UpdateExercise(ctx context.Context, e dto.UpdateExerciseInput, id uuid.UUID) error {
+	ct, err := r.Pool.Exec(ctx, updateExerciseQuery, e.Muscle, e.Position, e.Description, id)
 	if err != nil {
 		return fmt.Errorf("update exercise: %w", err)
 	}

@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"trainers-manager/internal/entity"
+	"trainers-manager/internal/usecase/dto"
 
 	"github.com/google/uuid"
 )
@@ -19,7 +20,7 @@ type (
 	}
 	Exercise interface {
 		CreateExercise(context.Context, entity.Exercise) (uuid.UUID, error)
-		UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error
+		UpdateExercise(context.Context, dto.UpdateExerciseInput, uuid.UUID) error
 		DeleteExercise(context.Context, uuid.UUID) error
 		ListExercises(context.Context) ([]entity.Exercise, error)
 	}
