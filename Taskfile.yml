@@ -53,7 +53,7 @@ tasks:
       vars:
         - NAME
     cmds:
-      - migrate create -ext sql -dir migrations -seq {{.NAME}}
+      - migrate create -ext sql -dir migrations -format "20060102150405" {{.NAME}}
 
   mock-gen:
     desc: Generate mocks for testing
