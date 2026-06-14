@@ -56,6 +56,7 @@ func Run(cfg *config.Config) error {
 	restapi.NewRouter(
 		httpserver.App,
 		cfg,
+		pg.Pool,
 		l,
 		trainingUseCase,
 		exerciseUseCase,

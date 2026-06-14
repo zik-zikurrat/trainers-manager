@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // NewRouter -.
@@ -21,6 +22,7 @@ import (
 func NewRouter(
 	app *fiber.App,
 	cfg *config.Config,
+	pool *pgxpool.Pool,
 	l logger.Interface,
 	training usecase.Training,
 	exercise usecase.Exercise,
@@ -39,6 +41,12 @@ func NewRouter(
 	// app.Get("/swagger/*", swagger.HandlerDefault)
 
 	apiV1Group := app.Group("/v1")
+	apiV1Group.Get("/health", func(c *fiber.Ctx) error {
+		if err := pool.Ping(c.Context()); err != nil {
+			return c.SendStatus(503)
+		}
+		return c.SendStatus(200)
+	})
 	{
 		apiV1Group.Use(middleware.TracingMiddleware())
 		apiV1Group.Use(cors.New())
