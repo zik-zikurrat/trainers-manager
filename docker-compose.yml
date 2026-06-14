@@ -8,8 +8,11 @@ services:
       POSTGRES_DB: ${POSTGRES_TRAINING_DB}
     volumes:
       - db_training_vol:/var/lib/postgresql/data
-    ports:
-      - ${POSTGRES_TRAINING_PORT}:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_TRAINING_USER} -d ${POSTGRES_TRAINING_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
     networks:
       - training_net
@@ -35,33 +38,22 @@ services:
     networks:
       - training_net
 
-    # training:
-    #   container_name: training
-    #   build:
-    #     context: .
-    #     dockerfile: ./Dockerfile
-    #   ports:
-    #     - ${TRAINING_PORT}:${TRAINING_PORT}
-    #   environment:
-    #     PORT: ${TRAINING_PORT}
-    #     HOST: ${TRAINING_HOST}
-    #     POSTGRES_HOST: ${POSTGRES_TRAINING_HOST}
-    #     POSTGRES_PORT: ${POSTGRES_TRAINING_PORT}
-    #     POSTGRES_USER: ${POSTGRES_TRAINING_USER}
-    #     POSTGRES_PASSWORD: ${POSTGRES_TRAINING_PASSWORD}
-    #     POSTGRES_DB: ${POSTGRES_TRAINING_DB}
-    #     POSTGRES_USE_SSL: ${POSTGRES_TRAINING_USE_SSL}
-    #     REDIS_HOST: ${REDIS_HOST}
-    #     REDIS_PORT: ${REDIS_PORT}
-    #     SERVER_TIMEOUT: ${SERVER_TIMEOUT}
-    #     DB_TIMEOUT: ${DB_TIMEOUT}
-    #   depends_on:
-    #     - db_training
-    #     - cache
-    #     - nats-js
-    #   restart: unless-stopped
-    #   networks:
-    #     - training_net
+  training:
+      container_name: training
+      build:
+        context: .
+        dockerfile: ./Dockerfile
+      ports:
+        - ${TRAINING_PORT}:9045
+      environment:
+        CONFIG_PATH: config/docker.yaml
+        LLM_API_KEY: ${LLM_API_KEY}
+      depends_on:
+        db_training:
+          condition: service_healthy
+      restart: unless-stopped
+      networks:
+        - training_net
 networks:
   training_net:
 
