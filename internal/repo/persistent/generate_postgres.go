@@ -82,7 +82,7 @@ func (r *GeneratorRepo) ListExercises(ctx context.Context) ([]entity.Exercise, e
 	out := make([]entity.Exercise, 0, _defaultEntityCap)
 	for rows.Next() {
 		var e entity.Exercise
-		if err := rows.Scan(&e.ID, &e.Muscle, &e.Description, &e.CreatedAt, &e.UpdatedAt); err != nil {
+		if err := rows.Scan(&e.ID, &e.Muscle, &e.Description, &e.Position, &e.CreatedAt, &e.UpdatedAt); err != nil {
 			return nil, fmt.Errorf("list exercises scan: %w", err)
 		}
 		out = append(out, e)
