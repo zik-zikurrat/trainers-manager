@@ -26,7 +26,7 @@ func (us *TrainingGroupUseCase) CreateGroup(ctx context.Context, g entity.Traini
 	const op = "training.CreateGroup"
 	id, err := us.r.CreateGroup(ctx, g)
 	if err != nil {
-		us.l.Error("Failed to store group", err, op)
+		us.l.Error("Failed to store group %v (op=%v)", err, op)
 	}
 	return id, err
 }
@@ -35,7 +35,7 @@ func (us *TrainingGroupUseCase) ListGroups(ctx context.Context) ([]entity.Traini
 	const op = "training.ListGroups"
 	groups, err := us.r.ListGroups(ctx)
 	if err != nil {
-		us.l.Error("Failed to list groups", err, op)
+		us.l.Error("Failed to list groups %v (op=%v)", err, op)
 		return nil, err
 	}
 	return groups, nil
@@ -44,7 +44,7 @@ func (us *TrainingGroupUseCase) ListGroups(ctx context.Context) ([]entity.Traini
 func (us *TrainingGroupUseCase) UpdateGroup(ctx context.Context, g entity.TrainingGroup, id uuid.UUID) error {
 	const op = "training.UpdateGroup"
 	if err := us.r.UpdateGroup(ctx, g, id); err != nil {
-		us.l.Error("Failed to update group", err, op)
+		us.l.Error("Failed to update group %v (op=%v)", err, op)
 		return err
 	}
 	return nil
@@ -53,7 +53,7 @@ func (us *TrainingGroupUseCase) UpdateGroup(ctx context.Context, g entity.Traini
 func (us *TrainingGroupUseCase) DeleteGroup(ctx context.Context, id uuid.UUID) error {
 	const op = "training.DeleteGroup"
 	if err := us.r.DeleteGroup(ctx, id); err != nil {
-		us.l.Error("Failed to delete group", err, op)
+		us.l.Error("Failed to delete group %v (op=%v)", err, op)
 		return err
 	}
 	return nil
@@ -63,7 +63,7 @@ func (us *TrainingGroupUseCase) GetGroupByName(ctx context.Context, name string)
 	const op = "training.CreateGroup"
 	group, err := us.r.GetGroupByName(ctx, name)
 	if err != nil {
-		us.l.Error("Failed to get group by name", err, op)
+		us.l.Error("Failed to get group by name %v (op=%v)", err, op)
 		return entity.TrainingGroup{}, err
 	}
 	return group, nil

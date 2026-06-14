@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"context"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
@@ -17,7 +19,8 @@ func TracingMiddleware() fiber.Handler {
 		}
 		c.Locals(TraceIDKey, traceID)
 		c.Response().Header.Set("X-Trace-ID", traceID)
-
+		ctx := context.WithValue(c.UserContext(), TraceIDKey, traceID)
+		c.SetUserContext(ctx)
 		return c.Next()
 	}
 }

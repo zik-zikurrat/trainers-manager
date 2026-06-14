@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -32,10 +33,8 @@ func NewRouter(
 	group usecase.Group,
 	generator usecase.Generate,
 ) {
-	// Options
-	// app.Use(middleware.Logger(l))
-	// app.Use(middleware.Recovery(l))
 
+	app.Use(recover.New())
 	// Prometheus metrics TODO
 	// Swagger TODO
 	// app.Get("/swagger/*", swagger.HandlerDefault)
@@ -48,7 +47,11 @@ func NewRouter(
 		return c.SendStatus(200)
 	})
 	{
+		// Tracing
 		apiV1Group.Use(middleware.TracingMiddleware())
+		// Options
+		apiV1Group.Use(middleware.LoggerMiddleware(l))
+		// Cors
 		apiV1Group.Use(cors.New())
 		v1.NewTrainingRoutes(
 			apiV1Group,

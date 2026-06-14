@@ -26,7 +26,7 @@ func NewStructureUseCase(l *logger.Logger, r repo.TrainingStructureRepo) *Struct
 func (us *StructureUseCase) CreateStructure(ctx context.Context, structure entity.TrainingStructure) error {
 	const op = "training.CreateStructure"
 	if err := us.r.CreateStructure(ctx, structure); err != nil {
-		us.l.Error("Failed to store structure", err, op)
+		us.l.Error("Failed to store structure %v (op=%v)", err, op)
 		return err
 	}
 	return nil
@@ -36,7 +36,7 @@ func (us *StructureUseCase) CreateStructure(ctx context.Context, structure entit
 func (us *StructureUseCase) UpdateStructure(ctx context.Context, structure entity.TrainingStructure, id uuid.UUID) error {
 	const op = "training.UpdateStructure"
 	if err := us.r.UpdateStructure(ctx, structure, id); err != nil {
-		us.l.Error("Failed to update structure", err, op)
+		us.l.Error("Failed to update structure %v (op=%v)", err, op)
 		return err
 	}
 	return nil
@@ -46,7 +46,7 @@ func (us *StructureUseCase) UpdateStructure(ctx context.Context, structure entit
 func (us *StructureUseCase) DeleteStructure(ctx context.Context, id uuid.UUID) error {
 	const op = "training.DeleteStructure"
 	if err := us.r.DeleteStructure(ctx, id); err != nil {
-		us.l.Error("Failed to delete structure", err, op)
+		us.l.Error("Failed to delete structure %v (op=%v)", err, op)
 		return err
 	}
 	return nil
@@ -57,7 +57,7 @@ func (us *StructureUseCase) GetStructure(ctx context.Context, id uuid.UUID) (ent
 	const op = "training.GetStructure"
 	structure, err := us.r.GetStructure(ctx, id)
 	if err != nil {
-		us.l.Error("Failed to get structure", err, op)
+		us.l.Error("Failed to get structure %v (op=%v)", err, op)
 		return entity.TrainingStructure{}, err
 	}
 	return structure, nil
@@ -68,7 +68,7 @@ func (us *StructureUseCase) ListStructure(ctx context.Context) ([]entity.Trainin
 	const op = "training.ListStructure"
 	structures, err := us.r.ListStructure(ctx)
 	if err != nil {
-		us.l.Error("Failed to list structure", err, op)
+		us.l.Error("Failed to list structure %v (op=%v)", err, op)
 		return nil, err
 	}
 	return structures, nil

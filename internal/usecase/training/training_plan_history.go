@@ -25,7 +25,7 @@ func (us *PlanHistoryUseCase) GetPlanHistory(ctx context.Context, planID uuid.UU
 	const op = "training.GetPlanHistory"
 	planHistory, err := us.r.GetPlanHistory(ctx, planID)
 	if err != nil {
-		us.l.Error("Failed to get plan history", err, op)
+		us.l.Error("Failed to get plan history %v (op=%v)", err, op)
 		return nil, err
 	}
 	return planHistory, nil

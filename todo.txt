@@ -1,35 +1,3 @@
-Надо разбить интерфейс
-// internal/usecase/contracts.go — рядом с теми, кто их использует
-
-type StructureRepo interface {
-	CreateStructure(context.Context, entity.TrainingStructure) error
-	UpdateStructure(context.Context, entity.TrainingStructure, uuid.UUID) error
-	DeleteStructure(context.Context, uuid.UUID) error
-	GetStructure(context.Context, uuid.UUID) (entity.TrainingStructure, error)
-}
-
-type ExerciseRepo interface {
-	CreateExercise(context.Context, entity.Exercise) (uuid.UUID, error)
-	UpdateExercise(context.Context, entity.Exercise, uuid.UUID) error
-	DeleteExercise(context.Context, uuid.UUID) error
-	ListExercises(context.Context) ([]entity.Exercise, error)
-}
-
-type GroupRepo interface {
-	CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
-	ListGroups(context.Context) ([]entity.TrainingGroup, error)
-	UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
-	DeleteGroup(context.Context, uuid.UUID) error
-	GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
-}
-
-// тот, который реально нужен генератору — самый интересный
-type GenerationRepo interface {
-	GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
-	GetStructure(context.Context, uuid.UUID) (entity.TrainingStructure, error)
-	ListExercises(context.Context) ([]entity.Exercise, error)
-	RecentPlans(context.Context, uuid.UUID, int) ([]entity.TrainingPlan, error)
-	CreateTraining(context.Context) (uuid.UUID, error)
-	LinkExercises(context.Context, uuid.UUID, []uuid.UUID) error
-	StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
-}
+Надо сделать оповещение пользователя о том что его план готов через websocket
+Надо добавить нормальный CI/CD с деплоем
+Надо добаивть метрики графана

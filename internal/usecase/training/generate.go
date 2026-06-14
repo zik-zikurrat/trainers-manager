@@ -33,19 +33,19 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 
 	gen, err := us.gen.Generate(ctx, prompt)
 	if err != nil {
-		us.l.Error("llm generate failed", err, op)
+		us.l.Error("llm generate failed %v (op=%v)", err, op)
 		return entity.TrainingPlan{}, err
 	}
 
 	validIDs, err := validateExerciseIDs(gen.ExerciseIDs, prompt.Pool)
 	if err != nil {
-		us.l.Error("llm returned invalid exercises", err, op)
+		us.l.Error("llm returned invalid exercises %v (op=%v)", err, op)
 		return entity.TrainingPlan{}, err
 	}
 
 	trainID, err := us.r.CreateTraining(ctx)
 	if err != nil {
-		us.l.Error("create training failed", err, op)
+		us.l.Error("create training failed %v (op=%v)", err, op)
 		return entity.TrainingPlan{}, err
 	}
 	if err := us.r.LinkExercises(ctx, trainID, validIDs); err != nil {
@@ -63,7 +63,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 	}
 	planID, err := us.r.StoreTrainingPlan(ctx, plan)
 	if err != nil {
-		us.l.Error("store plan failed", err, op)
+		us.l.Error("store plan failed %v (op=%v)", err, op)
 		return entity.TrainingPlan{}, err
 	}
 	plan.ID = planID
@@ -75,13 +75,13 @@ func (us *GenerateUseCase) buildPrompt(ctx context.Context, trainType string, st
 
 	group, err := us.r.GetGroupByName(ctx, trainType)
 	if err != nil {
-		us.l.Error("group lookup failed", err, op)
+		us.l.Error("group lookup failed %v (op=%v)", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
 	recent, err := us.r.RecentPlans(ctx, group.ID, _limitPlans)
 	if err != nil {
-		us.l.Error("recent plans failed", err, op)
+		us.l.Error("recent plans failed %v (op=%v)", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
@@ -95,13 +95,13 @@ func (us *GenerateUseCase) buildPrompt(ctx context.Context, trainType string, st
 
 	structure, err := us.r.GetStructure(ctx, structureID)
 	if err != nil {
-		us.l.Error("structure lookup failed", err, op)
+		us.l.Error("structure lookup failed %v (op=%v)", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 
 	pool, err := us.r.ListExercises(ctx)
 	if err != nil {
-		us.l.Error("exercises pool failed", err, op)
+		us.l.Error("exercises pool failed %v (op=%v)", err, op)
 		return usecase.GeneratePrompt{}, entity.TrainingGroup{}, err
 	}
 

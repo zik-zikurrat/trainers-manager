@@ -27,7 +27,7 @@ func (us *PlanUseCase) StoreTrainingPlan(ctx context.Context, p entity.TrainingP
 	const op = "training.StoreTrainingPlan"
 	id, err := us.r.StoreTrainingPlan(ctx, p)
 	if err != nil {
-		us.l.Error("Failed to store plan", err, op)
+		us.l.Error("Failed to store plan %v (op=%v)", err, op)
 	}
 	return id, err
 }
@@ -35,7 +35,7 @@ func (us *PlanUseCase) StoreTrainingPlan(ctx context.Context, p entity.TrainingP
 func (us *PlanUseCase) UpdateTrainingPlan(ctx context.Context, p entity.TrainingPlan, id uuid.UUID) error {
 	const op = "training.UpdateTrainingPlan"
 	if err := us.r.UpdateTrainingPlan(ctx, p, id); err != nil {
-		us.l.Error("Failed to update plan", err, op)
+		us.l.Error("Failed to update plan %v (op=%v)", err, op)
 		return err
 	}
 	return nil
@@ -45,7 +45,7 @@ func (us *PlanUseCase) GetTrainingPlan(ctx context.Context, id uuid.UUID) (entit
 	const op = "training.GetTrainingPlan"
 	plan, err := us.r.GetTrainingPlan(ctx, id)
 	if err != nil {
-		us.l.Error("Failed to get plan", err, op)
+		us.l.Error("Failed to get plan %v (op=%v)", err, op)
 	}
 	return plan, nil
 }
@@ -54,7 +54,7 @@ func (us *PlanUseCase) ListTrainingPlan(ctx context.Context) ([]entity.TrainingP
 	const op = "training.ListTrainingPlan"
 	plans, err := us.r.ListTrainingPlan(ctx)
 	if err != nil {
-		us.l.Error("Failed to list plans", err, op)
+		us.l.Error("Failed to list plans %v (op=%v)", err, op)
 	}
 	return plans, nil
 }
