@@ -26,7 +26,7 @@ func (us *TrainingGroupUseCase) CreateGroup(ctx context.Context, g entity.Traini
 	const op = "training.CreateGroup"
 	id, err := us.r.CreateGroup(ctx, g)
 	if err != nil {
-		us.l.Error("Failed to store group %v (op=%v)", err, op)
+		us.l.Error("Failed to create group %v (op=%v)", err, op)
 	}
 	return id, err
 }

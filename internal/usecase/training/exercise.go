@@ -28,7 +28,7 @@ func (us *ExerciseUseCase) CreateExercise(ctx context.Context, e entity.Exercise
 	const op = "training.CreateExercise"
 	id, err := us.r.CreateExercise(ctx, e)
 	if err != nil {
-		us.l.Error("Failed to store exercise: %v (op=%v)", err, op)
+		us.l.Error("Failed to create exercise: %v (op=%v)", err, op)
 		return uuid.Nil, err
 	}
 	return id, nil

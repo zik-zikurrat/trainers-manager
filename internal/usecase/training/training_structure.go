@@ -26,7 +26,7 @@ func NewStructureUseCase(l *logger.Logger, r repo.TrainingStructureRepo) *Struct
 func (us *StructureUseCase) CreateStructure(ctx context.Context, structure entity.TrainingStructure) error {
 	const op = "training.CreateStructure"
 	if err := us.r.CreateStructure(ctx, structure); err != nil {
-		us.l.Error("Failed to store structure %v (op=%v)", err, op)
+		us.l.Error("Failed to create structure %v (op=%v)", err, op)
 		return err
 	}
 	return nil

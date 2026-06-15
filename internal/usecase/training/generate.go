@@ -63,7 +63,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 	}
 	planID, err := us.r.StoreTrainingPlan(ctx, plan)
 	if err != nil {
-		us.l.Error("store plan failed %v (op=%v)", err, op)
+		us.l.Error("create plan failed %v (op=%v)", err, op)
 		return entity.TrainingPlan{}, err
 	}
 	plan.ID = planID

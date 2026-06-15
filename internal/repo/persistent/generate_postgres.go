@@ -105,7 +105,7 @@ func (r *GeneratorRepo) LinkExercises(ctx context.Context, trainingID uuid.UUID,
 func (r *GeneratorRepo) StoreTrainingPlan(ctx context.Context, p entity.TrainingPlan) (uuid.UUID, error) {
 	tx, err := r.Pool.Begin(ctx)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("store plan begin: %w", err)
+		return uuid.Nil, fmt.Errorf("create plan begin: %w", err)
 	}
 	defer tx.Rollback(ctx)
 
@@ -113,19 +113,19 @@ func (r *GeneratorRepo) StoreTrainingPlan(ctx context.Context, p entity.Training
 		p.Plan, p.Status, p.TrainID, p.GroupID, p.Accent, p.Skills, p.TrainingStructureID,
 	).Scan(&p.ID, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("store plan insert: %w", err)
+		return uuid.Nil, fmt.Errorf("create plan insert: %w", err)
 	}
 
 	snapshot, err := json.Marshal(p)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("store plan marshal: %w", err)
+		return uuid.Nil, fmt.Errorf("create plan marshal: %w", err)
 	}
 	if _, err := tx.Exec(ctx, insertPlanHistoryQuery, p.ID, entity.HistoryActionCreate, snapshot); err != nil {
-		return uuid.Nil, fmt.Errorf("store plan history: %w", err)
+		return uuid.Nil, fmt.Errorf("create plan history: %w", err)
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-		return uuid.Nil, fmt.Errorf("store plan commit: %w", err)
+		return uuid.Nil, fmt.Errorf("create plan commit: %w", err)
 	}
 	return p.ID, nil
 }

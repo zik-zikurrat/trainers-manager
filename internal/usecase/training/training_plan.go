@@ -27,7 +27,7 @@ func (us *PlanUseCase) StoreTrainingPlan(ctx context.Context, p entity.TrainingP
 	const op = "training.StoreTrainingPlan"
 	id, err := us.r.StoreTrainingPlan(ctx, p)
 	if err != nil {
-		us.l.Error("Failed to store plan %v (op=%v)", err, op)
+		us.l.Error("Failed to create plan %v (op=%v)", err, op)
 	}
 	return id, err
 }
