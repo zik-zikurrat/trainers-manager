@@ -7,6 +7,7 @@ import (
 	"trainers-manager/internal/controller/restapi/v1/request"
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/internal/usecase/dto"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -91,12 +92,13 @@ func (r *V1) UpdateGroup(ctx *fiber.Ctx) error {
 		r.l.Error(err, "restapi - v1 - group")
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 	}
-
-	err = r.group.UpdateGroup(ctx.UserContext(), entity.TrainingGroup{
-		Name:        req.Name,
-		AccentCycle: req.AccentCycle,
-		SkillCycle:  req.SkillCycle,
-	}, uuidID)
+	input := dto.UpdateGroupInput{
+		ID:          uuidID,
+		Name:        &req.Name,
+		AccentCycle: &req.AccentCycle,
+		SkillCycle:  &req.SkillCycle,
+	}
+	err = r.group.UpdateGroup(ctx.UserContext(), input)
 	switch {
 	case errors.Is(err, repo.ErrNotFound):
 		return errorResponse(ctx, http.StatusNotFound, "Group not found")

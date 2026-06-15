@@ -39,7 +39,7 @@ type (
 	Group interface {
 		CreateGroup(context.Context, entity.TrainingGroup) (uuid.UUID, error)
 		ListGroups(context.Context) ([]entity.TrainingGroup, error)
-		UpdateGroup(context.Context, entity.TrainingGroup, uuid.UUID) error
+		UpdateGroup(context.Context, dto.UpdateGroupInput) error
 		DeleteGroup(context.Context, uuid.UUID) error
 		GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
 	}

@@ -5,6 +5,7 @@ import (
 
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/internal/usecase/dto"
 	"trainers-manager/pkg/logger"
 
 	"github.com/google/uuid"
@@ -41,9 +42,9 @@ func (us *TrainingGroupUseCase) ListGroups(ctx context.Context) ([]entity.Traini
 	return groups, nil
 }
 
-func (us *TrainingGroupUseCase) UpdateGroup(ctx context.Context, g entity.TrainingGroup, id uuid.UUID) error {
+func (us *TrainingGroupUseCase) UpdateGroup(ctx context.Context, g dto.UpdateGroupInput) error {
 	const op = "training.UpdateGroup"
-	if err := us.r.UpdateGroup(ctx, g, id); err != nil {
+	if err := us.r.UpdateGroup(ctx, g); err != nil {
 		us.l.Error("Failed to update group %v (op=%v)", err, op)
 		return err
 	}

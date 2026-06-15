@@ -7,6 +7,7 @@ import (
 
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/internal/usecase/dto"
 	"trainers-manager/pkg/postgres"
 
 	"github.com/google/uuid"
@@ -56,8 +57,8 @@ func (r *GroupRepo) ListGroups(ctx context.Context) ([]entity.TrainingGroup, err
 	return out, rows.Err()
 }
 
-func (r *GroupRepo) UpdateGroup(ctx context.Context, g entity.TrainingGroup, id uuid.UUID) error {
-	ct, err := r.Pool.Exec(ctx, updateTrainingGroupQuery, g.Name, g.AccentCycle, g.SkillCycle, id)
+func (r *GroupRepo) UpdateGroup(ctx context.Context, g dto.UpdateGroupInput) error {
+	ct, err := r.Pool.Exec(ctx, updateTrainingGroupQuery, g.Name, g.AccentCycle, g.SkillCycle, g.ID)
 	if isUniqueViolation(err) {
 		return repo.ErrAlreadyExists
 	}
