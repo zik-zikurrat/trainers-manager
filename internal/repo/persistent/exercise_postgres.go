@@ -23,7 +23,7 @@ func NewExerciseRepo(pg *postgres.Posgtres) *ExerciseRepo {
 }
 func (r *ExerciseRepo) CreateExercise(ctx context.Context, e entity.Exercise) (uuid.UUID, error) {
 	var id uuid.UUID
-	err := r.Pool.QueryRow(ctx, insertExerciseQuery, e.Muscle, e.Description).Scan(&id)
+	err := r.Pool.QueryRow(ctx, insertExerciseQuery, e.Muscle, e.Description, e.Position).Scan(&id)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("insert exercise: %w", err)
 	}

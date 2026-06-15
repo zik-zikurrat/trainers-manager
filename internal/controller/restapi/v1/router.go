@@ -51,6 +51,7 @@ func NewTrainingRoutes(
 		trainingGroup.Delete("/group/:id", r.DeleteGroup)
 		// plan
 		trainingGroup.Get("/plan", r.ListPlan)
+		trainingGroup.Get("/plan/:id", r.GetPlan)
 		// generate
 		trainingGroup.Post("/generate", r.Generate)
 	}

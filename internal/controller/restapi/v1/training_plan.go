@@ -29,3 +29,27 @@ func (r *V1) ListPlan(ctx *fiber.Ctx) error {
 	}
 	return ctx.Status(http.StatusOK).JSON(resp)
 }
+
+// @Summary     Get plan
+// @Description Getn training plan
+// @ID          trainingPlan
+// @Tags  	    trainingPlan
+// @Accept      json
+// @Produce     json
+// @Success     200
+// @Failure     500 {object} response.Error
+// @Router      /training/plan/:id [get]
+func (r *V1) GetPlan(ctx *fiber.Ctx) error {
+	uuidID, err := uuid.Parse(ctx.Params("id"))
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - plan")
+		return errorResponse(ctx, http.StatusBadRequest, "Invalid id")
+	}
+	plan, err := r.plan.GetTrainingPlan(ctx.UserContext(), uuidID)
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - plan")
+		return errorResponse(ctx, http.StatusInternalServerError, "Error while getting plan")
+	}
+	resp := response.ToTrainingPlan(plan)
+	return ctx.Status(http.StatusOK).JSON(resp)
+}
