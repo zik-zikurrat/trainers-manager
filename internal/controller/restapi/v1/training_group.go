@@ -3,6 +3,7 @@ package v1
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"trainers-manager/internal/controller/restapi/v1/request"
 	"trainers-manager/internal/entity"
@@ -24,6 +25,7 @@ import (
 // @Router      /training/group [post]
 func (r *V1) CreateGroup(ctx *fiber.Ctx) error {
 	var req request.TrainingGroup
+	req.Name = strings.TrimSpace(req.Name)
 	if err := ctx.BodyParser(&req); err != nil {
 		r.l.Error(err, "restapi - v1 - group")
 		return errorResponse(ctx, http.StatusBadRequest, "Invalid request body")
