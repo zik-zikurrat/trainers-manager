@@ -14,6 +14,7 @@ import (
 	"trainers-manager/pkg/httpserver"
 	"trainers-manager/pkg/logger"
 	"trainers-manager/pkg/postgres"
+	"trainers-manager/pkg/workers"
 )
 
 func Run(cfg *config.Config) error {
@@ -30,6 +31,8 @@ func Run(cfg *config.Config) error {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
+	genEventCh := make(chan workers.GenEvent, 100)
+
 	// Repository
 	exerciseRepo := persistent.NewExerciseRepo(pg)
 	trainingRepo := persistent.NewTrainingRepo(pg)
@@ -38,8 +41,9 @@ func Run(cfg *config.Config) error {
 	partitionsRepo := persistent.NewPartitionRepo(pg)
 	planHistoryRepo := persistent.NewPlanHistoryRepo(pg)
 	planRepo := persistent.NewPlanRepo(pg)
-	generationRepo := persistent.NewGeneratorRepo(pg) // строка 41
-	gen := webapi.New(cfg)                            // *webapi.Generator реализует usecase.PlanGenerator
+	generationTaskRepo := persistent.NewGenerationTaskRepo(pg)
+	generationRepo := persistent.NewGeneratorRepo(pg)
+	gen := webapi.New(cfg, genEventCh)
 	// UseCase
 	exerciseUseCase := training.NewExerciseUseCase(l, exerciseRepo)
 	structureUseCase := training.NewStructureUseCase(l, structureRepo)
@@ -48,6 +52,10 @@ func Run(cfg *config.Config) error {
 	planHistoryUseCase := training.NewPlanHistoryUseCase(l, planHistoryRepo)
 	generateUseCase := training.NewGenerateUseCase(l, generationRepo, gen)
 	groupUseCase := training.NewGroupUseCase(l, groupRepo)
+
+	// Generation Worker
+	genWorker := workers.NewGenWorker(l, genEventCh, generationTaskRepo)
+	go genWorker.Run(ctx)
 
 	// Partition
 	StartPartitionMaintainer(ctx, partitionsRepo, l)
@@ -65,13 +73,16 @@ func Run(cfg *config.Config) error {
 		planHistoryUseCase,
 		groupUseCase,
 		generateUseCase,
+		genEventCh,
 	)
 	httpserver.Start()
 
 	select {
 	case <-ctx.Done():
+		close(genEventCh)
 		l.Info("app - Run - shutdown signal received")
 	case err := <-httpserver.Notify():
+		close(genEventCh)
 		l.Error(fmt.Errorf("app - Run - httpserver.Notify: %w", err))
 	}
 
