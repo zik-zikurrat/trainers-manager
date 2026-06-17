@@ -28,7 +28,7 @@ func TestGenerate_FirstPlanUsesFirstAccent(t *testing.T) {
 
 	genRepo := repomocks.NewMockGenerationRepo(ctrl)
 	planGen := ucmocks.NewMockPlanGenerator(ctrl)
-
+	taskID := uuid.New()
 	genRepo.EXPECT().GetGroupByName(gomock.Any(), "upper body").
 		Return(entity.TrainingGroup{
 			ID:          groupID,
@@ -41,7 +41,7 @@ func TestGenerate_FirstPlanUsesFirstAccent(t *testing.T) {
 	genRepo.EXPECT().ListExercises(gomock.Any()).
 		Return([]entity.Exercise{{ID: exID, Muscle: "спина"}}, nil)
 
-	planGen.EXPECT().Generate(gomock.Any(), gomock.Any()).
+	planGen.EXPECT().Generate(gomock.Any(), gomock.Any(), taskID).
 		Return(usecase.GeneratedPlan{ExerciseIDs: []uuid.UUID{exID}, PlanText: "план"}, nil)
 
 	genRepo.EXPECT().CreateTraining(gomock.Any()).Return(uuid.New(), nil)
@@ -50,7 +50,7 @@ func TestGenerate_FirstPlanUsesFirstAccent(t *testing.T) {
 
 	uc := NewGenerateUseCase(testLogger(), genRepo, planGen)
 
-	plan, err := uc.Generate(context.Background(), "upper body", structID)
+	plan, err := uc.Generate(context.Background(), "upper body", structID, taskID)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

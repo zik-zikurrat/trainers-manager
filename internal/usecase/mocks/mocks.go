@@ -481,18 +481,18 @@ func (m *MockGenerate) EXPECT() *MockGenerateMockRecorder {
 }
 
 // Generate mocks base method.
-func (m *MockGenerate) Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error) {
+func (m *MockGenerate) Generate(ctx context.Context, trainType string, structureID, taskID uuid.UUID) (entity.TrainingPlan, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Generate", ctx, trainType, structureID)
+	ret := m.ctrl.Call(m, "Generate", ctx, trainType, structureID, taskID)
 	ret0, _ := ret[0].(entity.TrainingPlan)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Generate indicates an expected call of Generate.
-func (mr *MockGenerateMockRecorder) Generate(ctx, trainType, structureID any) *gomock.Call {
+func (mr *MockGenerateMockRecorder) Generate(ctx, trainType, structureID, taskID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Generate", reflect.TypeOf((*MockGenerate)(nil).Generate), ctx, trainType, structureID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Generate", reflect.TypeOf((*MockGenerate)(nil).Generate), ctx, trainType, structureID, taskID)
 }
 
 // MockPlanGenerator is a mock of PlanGenerator interface.
@@ -520,16 +520,16 @@ func (m *MockPlanGenerator) EXPECT() *MockPlanGeneratorMockRecorder {
 }
 
 // Generate mocks base method.
-func (m *MockPlanGenerator) Generate(ctx context.Context, in usecase.GeneratePrompt) (usecase.GeneratedPlan, error) {
+func (m *MockPlanGenerator) Generate(ctx context.Context, in usecase.GeneratePrompt, taskID uuid.UUID) (usecase.GeneratedPlan, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Generate", ctx, in)
+	ret := m.ctrl.Call(m, "Generate", ctx, in, taskID)
 	ret0, _ := ret[0].(usecase.GeneratedPlan)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Generate indicates an expected call of Generate.
-func (mr *MockPlanGeneratorMockRecorder) Generate(ctx, in any) *gomock.Call {
+func (mr *MockPlanGeneratorMockRecorder) Generate(ctx, in, taskID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Generate", reflect.TypeOf((*MockPlanGenerator)(nil).Generate), ctx, in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Generate", reflect.TypeOf((*MockPlanGenerator)(nil).Generate), ctx, in, taskID)
 }

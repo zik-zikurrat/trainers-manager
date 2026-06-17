@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 	entity "trainers-manager/internal/entity"
+	workers "trainers-manager/internal/repo/workers"
 	dto "trainers-manager/internal/usecase/dto"
 
 	uuid "github.com/google/uuid"
@@ -581,6 +582,73 @@ func (m *MockGenerationRepo) StoreTrainingPlan(arg0 context.Context, arg1 entity
 func (mr *MockGenerationRepoMockRecorder) StoreTrainingPlan(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreTrainingPlan", reflect.TypeOf((*MockGenerationRepo)(nil).StoreTrainingPlan), arg0, arg1)
+}
+
+// MockGenerationTaskRepo is a mock of GenerationTaskRepo interface.
+type MockGenerationTaskRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockGenerationTaskRepoMockRecorder
+	isgomock struct{}
+}
+
+// MockGenerationTaskRepoMockRecorder is the mock recorder for MockGenerationTaskRepo.
+type MockGenerationTaskRepoMockRecorder struct {
+	mock *MockGenerationTaskRepo
+}
+
+// NewMockGenerationTaskRepo creates a new mock instance.
+func NewMockGenerationTaskRepo(ctrl *gomock.Controller) *MockGenerationTaskRepo {
+	mock := &MockGenerationTaskRepo{ctrl: ctrl}
+	mock.recorder = &MockGenerationTaskRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockGenerationTaskRepo) EXPECT() *MockGenerationTaskRepoMockRecorder {
+	return m.recorder
+}
+
+// CreateGenerationTask mocks base method.
+func (m *MockGenerationTaskRepo) CreateGenerationTask(arg0 context.Context, arg1 workers.GenerationTask) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateGenerationTask", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateGenerationTask indicates an expected call of CreateGenerationTask.
+func (mr *MockGenerationTaskRepoMockRecorder) CreateGenerationTask(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateGenerationTask", reflect.TypeOf((*MockGenerationTaskRepo)(nil).CreateGenerationTask), arg0, arg1)
+}
+
+// GetGenerationTask mocks base method.
+func (m *MockGenerationTaskRepo) GetGenerationTask(arg0 context.Context, arg1 uuid.UUID) (workers.GenerationTask, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetGenerationTask", arg0, arg1)
+	ret0, _ := ret[0].(workers.GenerationTask)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetGenerationTask indicates an expected call of GetGenerationTask.
+func (mr *MockGenerationTaskRepoMockRecorder) GetGenerationTask(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGenerationTask", reflect.TypeOf((*MockGenerationTaskRepo)(nil).GetGenerationTask), arg0, arg1)
+}
+
+// UpdateGenerationTask mocks base method.
+func (m *MockGenerationTaskRepo) UpdateGenerationTask(arg0 context.Context, arg1 workers.UpdateGenerationTask) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateGenerationTask", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateGenerationTask indicates an expected call of UpdateGenerationTask.
+func (mr *MockGenerationTaskRepoMockRecorder) UpdateGenerationTask(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateGenerationTask", reflect.TypeOf((*MockGenerationTaskRepo)(nil).UpdateGenerationTask), arg0, arg1)
 }
 
 // MockPartitionsRepo is a mock of PartitionsRepo interface.
