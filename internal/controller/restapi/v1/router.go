@@ -3,6 +3,7 @@ package v1
 import (
 	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/logger"
+	"trainers-manager/pkg/workers"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,7 @@ func NewTrainingRoutes(
 	group usecase.Group,
 	generator usecase.Generate,
 	l logger.Interface,
+	genCh chan workers.GenEvent,
 ) {
 	r := &V1{
 		training:    training,
@@ -29,6 +31,7 @@ func NewTrainingRoutes(
 		generator:   generator,
 		l:           l,
 		v:           validator.New(validator.WithRequiredStructEnabled()),
+		genCh:       genCh,
 	}
 	trainingGroup := apiV1Group.Group("/training")
 

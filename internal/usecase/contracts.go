@@ -44,10 +44,10 @@ type (
 		GetGroupByName(context.Context, string) (entity.TrainingGroup, error)
 	}
 	Generate interface {
-		Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error)
+		Generate(ctx context.Context, trainType string, structureID uuid.UUID, taskID uuid.UUID) (entity.TrainingPlan, error)
 	}
 	PlanGenerator interface {
-		Generate(ctx context.Context, in GeneratePrompt) (GeneratedPlan, error)
+		Generate(ctx context.Context, in GeneratePrompt, taskID uuid.UUID) (GeneratedPlan, error)
 	}
 )
 

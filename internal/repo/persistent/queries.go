@@ -70,3 +70,12 @@ var deleteTrainingGroupQuery string
 
 //go:embed query/get_training_group_by_name.sql
 var getTrainingGroupByNameQuery string
+
+//go:embed query/get_generation_task.sql
+var getGenerationTask string
+
+//go:embed query/update_generation_task.sql
+var updateGenerationTask string
+
+//go:embed query/insert_generation_task.sql
+var insertGenerationTask string

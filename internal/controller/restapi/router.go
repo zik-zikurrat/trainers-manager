@@ -6,6 +6,7 @@ import (
 	v1 "trainers-manager/internal/controller/restapi/v1"
 	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/logger"
+	"trainers-manager/pkg/workers"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -32,6 +33,7 @@ func NewRouter(
 	planHistory usecase.PlanHistory,
 	group usecase.Group,
 	generator usecase.Generate,
+	genCh chan workers.GenEvent,
 ) {
 
 	app.Use(recover.New())
@@ -63,6 +65,7 @@ func NewRouter(
 			group,
 			generator,
 			l,
+			genCh,
 		)
 	}
 }

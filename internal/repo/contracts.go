@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"trainers-manager/internal/entity"
+	repoWorker "trainers-manager/internal/repo/workers"
 	"trainers-manager/internal/usecase/dto"
 
 	"github.com/google/uuid"
@@ -13,7 +14,6 @@ var ErrNotFound = errors.New("not found")
 var ErrAlreadyExists = errors.New("already exists")
 
 //go:generate mockgen -source=contracts.go -destination=mocks/mocks.go -package=mocks
-
 type (
 	TrainingStructureRepo interface {
 		CreateStructure(context.Context, entity.TrainingStructure) error
@@ -56,6 +56,11 @@ type (
 		CreateTraining(context.Context) (uuid.UUID, error)
 		LinkExercises(context.Context, uuid.UUID, []uuid.UUID) error
 		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
+	}
+	GenerationTaskRepo interface {
+		CreateGenerationTask(context.Context, repoWorker.GenerationTask) error
+		UpdateGenerationTask(context.Context, repoWorker.UpdateGenerationTask) error
+		GetGenerationTask(context.Context, uuid.UUID) (repoWorker.GenerationTask, error)
 	}
 
 	PartitionsRepo interface {

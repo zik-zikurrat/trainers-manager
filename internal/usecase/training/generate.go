@@ -23,7 +23,7 @@ func NewGenerateUseCase(l *logger.Logger, r repo.GenerationRepo, gen usecase.Pla
 	return &GenerateUseCase{l: l, r: r, gen: gen}
 }
 
-func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, structureID uuid.UUID) (entity.TrainingPlan, error) {
+func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, structureID uuid.UUID, taskID uuid.UUID) (entity.TrainingPlan, error) {
 	const op = "training.Generate"
 
 	prompt, group, err := us.buildPrompt(ctx, trainType, structureID)
@@ -31,7 +31,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 		return entity.TrainingPlan{}, err
 	}
 
-	gen, err := us.gen.Generate(ctx, prompt)
+	gen, err := us.gen.Generate(ctx, prompt, taskID)
 	if err != nil {
 		us.l.Error("llm generate failed %v (op=%v)", err, op)
 		return entity.TrainingPlan{}, err
@@ -72,7 +72,6 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 
 func (us *GenerateUseCase) buildPrompt(ctx context.Context, trainType string, structureID uuid.UUID) (usecase.GeneratePrompt, entity.TrainingGroup, error) {
 	const op = "training.buildPrompt"
-
 	group, err := us.r.GetGroupByName(ctx, trainType)
 	if err != nil {
 		us.l.Error("group lookup failed %v (op=%v)", err, op)
