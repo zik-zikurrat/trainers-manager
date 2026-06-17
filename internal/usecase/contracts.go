@@ -29,7 +29,7 @@ type (
 	}
 	Plan interface {
 		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
-		UpdateTrainingPlan(context.Context, entity.TrainingPlan, uuid.UUID) error
+		UpdateTrainingPlan(context.Context, dto.UpdateTrainingPlan) error
 		GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
 		ListTrainingPlan(context.Context) ([]entity.TrainingPlan, error)
 	}

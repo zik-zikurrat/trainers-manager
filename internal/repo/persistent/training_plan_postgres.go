@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"trainers-manager/internal/entity"
 	"trainers-manager/internal/repo"
+	"trainers-manager/internal/usecase/dto"
 	"trainers-manager/pkg/postgres"
 
 	"github.com/google/uuid"
@@ -70,16 +71,15 @@ func (r *PlanRepo) StoreTrainingPlan(ctx context.Context, p entity.TrainingPlan)
 	return p.ID, nil
 }
 
-func (r *PlanRepo) UpdateTrainingPlan(ctx context.Context, p entity.TrainingPlan, id uuid.UUID) error {
+func (r *PlanRepo) UpdateTrainingPlan(ctx context.Context, p dto.UpdateTrainingPlan) error {
 	tx, err := r.Pool.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("update plan begin: %w", err)
 	}
 	defer tx.Rollback(ctx)
 
-	p.ID = id
-	err = tx.QueryRow(ctx, updateTrainingPlanQuery, p.Plan, p.Accent, p.Skills, id).
-		Scan(&p.TrainID, &p.TrainingStructureID, &p.CreatedAt, &p.UpdatedAt)
+	err = tx.QueryRow(ctx, updateTrainingPlanQuery, p.Plan, p.Accent, p.Skills, p.ID).
+		Scan(&p.ID, &p.TrainingStructureID, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return repo.ErrNotFound
 	}
@@ -91,7 +91,7 @@ func (r *PlanRepo) UpdateTrainingPlan(ctx context.Context, p entity.TrainingPlan
 	if err != nil {
 		return fmt.Errorf("update plan marshal: %w", err)
 	}
-	if _, err := tx.Exec(ctx, insertPlanHistoryQuery, id, entity.HistoryActionUpdate, snapshot); err != nil {
+	if _, err := tx.Exec(ctx, insertPlanHistoryQuery, p.ID, entity.HistoryActionUpdate, snapshot); err != nil {
 		return fmt.Errorf("update plan history: %w", err)
 	}
 

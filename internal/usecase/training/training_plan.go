@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"trainers-manager/internal/entity"
+	"trainers-manager/internal/usecase/dto"
 	"trainers-manager/pkg/logger"
 
 	"trainers-manager/internal/repo"
@@ -32,9 +33,9 @@ func (us *PlanUseCase) StoreTrainingPlan(ctx context.Context, p entity.TrainingP
 	return id, err
 }
 
-func (us *PlanUseCase) UpdateTrainingPlan(ctx context.Context, p entity.TrainingPlan, id uuid.UUID) error {
+func (us *PlanUseCase) UpdateTrainingPlan(ctx context.Context, p dto.UpdateTrainingPlan) error {
 	const op = "training.UpdateTrainingPlan"
-	if err := us.r.UpdateTrainingPlan(ctx, p, id); err != nil {
+	if err := us.r.UpdateTrainingPlan(ctx, p); err != nil {
 		us.l.Error("Failed to update plan %v (op=%v)", err, op)
 		return err
 	}
