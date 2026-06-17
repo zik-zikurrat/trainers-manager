@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS generation_tasks (
+    id UUID PRIMARY KEY,
+    status VARCHAR(25) NOT NULL,
+    error TEXT DEFAULT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
