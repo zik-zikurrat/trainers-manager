@@ -2,10 +2,12 @@ package v1
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
 	"trainers-manager/internal/controller/restapi/v1/request"
+	"trainers-manager/internal/repo"
 	"trainers-manager/pkg/workers"
 
 	"github.com/gofiber/fiber/v2"
@@ -49,4 +51,20 @@ func (r *V1) Generate(c *fiber.Ctx) error {
 	}()
 
 	return c.Status(http.StatusAccepted).JSON(map[string]string{"task_id": fmt.Sprintf("%v", task_id)})
+}
+
+func (r *V1) GetGenerationTask(c *fiber.Ctx) error {
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return errorResponse(c, http.StatusBadRequest, "Invalid task id")
+	}
+	task, err := r.generationTask.GetGenerationTask(c.UserContext(), id)
+	switch {
+	case errors.Is(err, repo.ErrNotFound):
+		return errorResponse(c, http.StatusNotFound, "Task not found")
+	case err != nil:
+		r.l.Error("GetGenerationTask: %v", err)
+		return errorResponse(c, http.StatusInternalServerError, "Task service error")
+	}
+	return c.Status(http.StatusOK).JSON(map[string]string{"status": task.Status})
 }

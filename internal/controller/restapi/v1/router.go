@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"trainers-manager/internal/repo"
 	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/logger"
 	"trainers-manager/pkg/workers"
@@ -18,20 +19,22 @@ func NewTrainingRoutes(
 	planHistory usecase.PlanHistory,
 	group usecase.Group,
 	generator usecase.Generate,
+	generationTask repo.GenerationTaskRepo,
 	l logger.Interface,
 	genCh chan workers.GenEvent,
 ) {
 	r := &V1{
-		training:    training,
-		exercise:    exercise,
-		structure:   structure,
-		plan:        plan,
-		planHistory: planHistory,
-		group:       group,
-		generator:   generator,
-		l:           l,
-		v:           validator.New(validator.WithRequiredStructEnabled()),
-		genCh:       genCh,
+		training:       training,
+		exercise:       exercise,
+		structure:      structure,
+		plan:           plan,
+		planHistory:    planHistory,
+		group:          group,
+		generator:      generator,
+		generationTask: generationTask,
+		l:              l,
+		v:              validator.New(validator.WithRequiredStructEnabled()),
+		genCh:          genCh,
 	}
 	trainingGroup := apiV1Group.Group("/training")
 
@@ -58,5 +61,6 @@ func NewTrainingRoutes(
 		trainingGroup.Get("/plan/:id", r.GetPlan)
 		// generate
 		trainingGroup.Post("/generate", r.Generate)
+		trainingGroup.Get("/generate/:id", r.GetGenerationTask)
 	}
 }

@@ -73,6 +73,7 @@ func Run(cfg *config.Config) error {
 		planHistoryUseCase,
 		groupUseCase,
 		generateUseCase,
+		generationTaskRepo,
 		genEventCh,
 	)
 	httpserver.Start()

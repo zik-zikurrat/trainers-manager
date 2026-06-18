@@ -4,6 +4,7 @@ import (
 	"trainers-manager/internal/config"
 	"trainers-manager/internal/controller/restapi/middleware"
 	v1 "trainers-manager/internal/controller/restapi/v1"
+	"trainers-manager/internal/repo"
 	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/logger"
 	"trainers-manager/pkg/workers"
@@ -33,6 +34,7 @@ func NewRouter(
 	planHistory usecase.PlanHistory,
 	group usecase.Group,
 	generator usecase.Generate,
+	generationTask repo.GenerationTaskRepo,
 	genCh chan workers.GenEvent,
 ) {
 
@@ -64,6 +66,7 @@ func NewRouter(
 			planHistory,
 			group,
 			generator,
+			generationTask,
 			l,
 			genCh,
 		)

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"trainers-manager/internal/repo"
 	"trainers-manager/internal/usecase"
 	"trainers-manager/pkg/logger"
 	"trainers-manager/pkg/workers"
@@ -10,13 +11,14 @@ import (
 
 // V1 -.
 type V1 struct {
-	training    usecase.Training
-	exercise    usecase.Exercise
-	structure   usecase.Structure
-	plan        usecase.Plan
-	planHistory usecase.PlanHistory
-	group       usecase.Group
-	generator   usecase.Generate
+	training       usecase.Training
+	exercise       usecase.Exercise
+	structure      usecase.Structure
+	plan           usecase.Plan
+	planHistory    usecase.PlanHistory
+	group          usecase.Group
+	generator      usecase.Generate
+	generationTask repo.GenerationTaskRepo
 
 	l     logger.Interface
 	v     *validator.Validate
