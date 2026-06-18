@@ -1,7 +1,7 @@
 package request
 
 type UpdateTrainingPlan struct {
-	Plan   *string
-	Accent *string
-	Skills *string
+	Plan   *string `json:"plan"`
+	Accent *string `json:"accent"`
+	Skills *string `json:"skills"`
 }
