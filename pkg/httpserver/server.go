@@ -38,6 +38,7 @@ func New(ctx context.Context, l logger.Interface, cfg *config.Config) *Server {
 		eg:      group,
 		App:     nil,
 		notify:  make(chan error, 1),
+		prefork: false,
 		address: helper.GetServerAddr(cfg),
 		logger:  l,
 	}

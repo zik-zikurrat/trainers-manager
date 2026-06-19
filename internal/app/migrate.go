@@ -41,7 +41,11 @@ func Migrate(cfg *config.Config) {
 	}
 
 	err = m.Up()
-	defer m.Close()
+	defer func() {
+		if _, err := m.Close(); err != nil {
+			log.Printf("close migrate: %v", err)
+		}
+	}()
 	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		log.Fatalf("Migrate: up error: %s", err)
 	}

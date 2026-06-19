@@ -36,21 +36,15 @@ func TestNextInCycle_EmptyCycle(t *testing.T) {
 }
 
 func TestValidateExerciseIDs(t *testing.T) {
-	response := make([]uuid.UUID, 0, 3)
 	poolID := make([]uuid.UUID, 0, 3)
-
 	for i := 0; i < 3; i++ {
-		id := uuid.New()
-		poolID = append(poolID, id)
-		response = append(response, id)
+		poolID = append(poolID, uuid.New())
 	}
-
 	pool := []entity.Exercise{
 		{ID: poolID[0]},
 		{ID: poolID[1]},
 		{ID: poolID[2]},
 	}
-
 	tests := []struct {
 		name     string
 		response []uuid.UUID
@@ -76,23 +70,18 @@ func TestValidateExerciseIDs(t *testing.T) {
 			wantErr:  true,
 		},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			got, err := validateExerciseIDs(tt.response, tt.pool)
-
 			if tt.wantErr {
 				if err == nil {
 					t.Fatalf("expected error, got nil")
 				}
 				return
 			}
-
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-
 			if len(got) != len(tt.response) {
 				t.Fatalf("expected %d ids, got %d", len(tt.response), len(got))
 			}

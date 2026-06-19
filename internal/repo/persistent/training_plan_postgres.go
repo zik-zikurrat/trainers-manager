@@ -48,7 +48,9 @@ func (r *PlanRepo) CreateTrainingPlan(ctx context.Context, p entity.TrainingPlan
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("create plan begin: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	err = tx.QueryRow(ctx, insertTrainingPlanQuery,
 		p.Plan, p.Status, p.TrainID, p.GroupID, p.Accent, p.Skills, p.TrainingStructureID,
@@ -76,7 +78,9 @@ func (r *PlanRepo) UpdateTrainingPlan(ctx context.Context, p dto.UpdateTrainingP
 	if err != nil {
 		return fmt.Errorf("update plan begin: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	err = tx.QueryRow(ctx, updateTrainingPlanQuery, p.Plan, p.Accent, p.Skills, p.ID).
 		Scan(&p.ID, &p.TrainingStructureID, &p.CreatedAt, &p.UpdatedAt)

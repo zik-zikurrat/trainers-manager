@@ -107,7 +107,9 @@ func (r *GeneratorRepo) CreateTrainingPlan(ctx context.Context, p entity.Trainin
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("create plan begin: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
 
 	err = tx.QueryRow(ctx, insertTrainingPlanQuery,
 		p.Plan, p.Status, p.TrainID, p.GroupID, p.Accent, p.Skills, p.TrainingStructureID,
