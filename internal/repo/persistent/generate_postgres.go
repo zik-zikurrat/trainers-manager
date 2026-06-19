@@ -102,7 +102,7 @@ func (r *GeneratorRepo) LinkExercises(ctx context.Context, trainingID uuid.UUID,
 	return nil
 }
 
-func (r *GeneratorRepo) StoreTrainingPlan(ctx context.Context, p entity.TrainingPlan) (uuid.UUID, error) {
+func (r *GeneratorRepo) CreateTrainingPlan(ctx context.Context, p entity.TrainingPlan) (uuid.UUID, error) {
 	tx, err := r.Pool.Begin(ctx)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("create plan begin: %w", err)

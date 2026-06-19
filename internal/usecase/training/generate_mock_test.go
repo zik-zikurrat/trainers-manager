@@ -46,7 +46,7 @@ func TestGenerate_FirstPlanUsesFirstAccent(t *testing.T) {
 
 	genRepo.EXPECT().CreateTraining(gomock.Any()).Return(uuid.New(), nil)
 	genRepo.EXPECT().LinkExercises(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
-	genRepo.EXPECT().StoreTrainingPlan(gomock.Any(), gomock.Any()).Return(uuid.New(), nil)
+	genRepo.EXPECT().CreateTrainingPlan(gomock.Any(), gomock.Any()).Return(uuid.New(), nil)
 
 	uc := NewGenerateUseCase(testLogger(), genRepo, planGen)
 

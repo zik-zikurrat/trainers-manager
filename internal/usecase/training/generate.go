@@ -61,7 +61,7 @@ func (us *GenerateUseCase) Generate(ctx context.Context, trainType string, struc
 		Skills:              prompt.Skills,
 		TrainingStructureID: structureID,
 	}
-	planID, err := us.r.StoreTrainingPlan(ctx, plan)
+	planID, err := us.r.CreateTrainingPlan(ctx, plan)
 	if err != nil {
 		us.l.Error("create plan failed %v (op=%v)", err, op)
 		return entity.TrainingPlan{}, err

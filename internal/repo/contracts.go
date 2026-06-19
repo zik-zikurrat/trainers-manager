@@ -32,7 +32,7 @@ type (
 		CreateTraining(context.Context) (uuid.UUID, error)
 	}
 	TrainingPlanRepo interface {
-		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
+		CreateTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
 		UpdateTrainingPlan(context.Context, dto.UpdateTrainingPlan) error
 		GetTrainingPlan(context.Context, uuid.UUID) (entity.TrainingPlan, error)
 		ListTrainingPlan(context.Context) ([]entity.TrainingPlan, error)
@@ -55,7 +55,7 @@ type (
 		RecentPlans(context.Context, uuid.UUID, int) ([]entity.TrainingPlan, error)
 		CreateTraining(context.Context) (uuid.UUID, error)
 		LinkExercises(context.Context, uuid.UUID, []uuid.UUID) error
-		StoreTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
+		CreateTrainingPlan(context.Context, entity.TrainingPlan) (uuid.UUID, error)
 	}
 	GenerationTaskRepo interface {
 		CreateGenerationTask(context.Context, repoWorker.GenerationTask) error

@@ -261,6 +261,21 @@ func (m *MockPlan) EXPECT() *MockPlanMockRecorder {
 	return m.recorder
 }
 
+// CreateTrainingPlan mocks base method.
+func (m *MockPlan) CreateTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan) (uuid.UUID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTrainingPlan", arg0, arg1)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTrainingPlan indicates an expected call of CreateTrainingPlan.
+func (mr *MockPlanMockRecorder) CreateTrainingPlan(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTrainingPlan", reflect.TypeOf((*MockPlan)(nil).CreateTrainingPlan), arg0, arg1)
+}
+
 // GetTrainingPlan mocks base method.
 func (m *MockPlan) GetTrainingPlan(arg0 context.Context, arg1 uuid.UUID) (entity.TrainingPlan, error) {
 	m.ctrl.T.Helper()
@@ -291,33 +306,18 @@ func (mr *MockPlanMockRecorder) ListTrainingPlan(arg0 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTrainingPlan", reflect.TypeOf((*MockPlan)(nil).ListTrainingPlan), arg0)
 }
 
-// StoreTrainingPlan mocks base method.
-func (m *MockPlan) StoreTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan) (uuid.UUID, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StoreTrainingPlan", arg0, arg1)
-	ret0, _ := ret[0].(uuid.UUID)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// StoreTrainingPlan indicates an expected call of StoreTrainingPlan.
-func (mr *MockPlanMockRecorder) StoreTrainingPlan(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreTrainingPlan", reflect.TypeOf((*MockPlan)(nil).StoreTrainingPlan), arg0, arg1)
-}
-
 // UpdateTrainingPlan mocks base method.
-func (m *MockPlan) UpdateTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan, arg2 uuid.UUID) error {
+func (m *MockPlan) UpdateTrainingPlan(arg0 context.Context, arg1 dto.UpdateTrainingPlan) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateTrainingPlan", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdateTrainingPlan", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateTrainingPlan indicates an expected call of UpdateTrainingPlan.
-func (mr *MockPlanMockRecorder) UpdateTrainingPlan(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockPlanMockRecorder) UpdateTrainingPlan(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTrainingPlan", reflect.TypeOf((*MockPlan)(nil).UpdateTrainingPlan), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTrainingPlan", reflect.TypeOf((*MockPlan)(nil).UpdateTrainingPlan), arg0, arg1)
 }
 
 // MockPlanHistory is a mock of PlanHistory interface.

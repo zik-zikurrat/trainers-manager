@@ -261,6 +261,21 @@ func (m *MockTrainingPlanRepo) EXPECT() *MockTrainingPlanRepoMockRecorder {
 	return m.recorder
 }
 
+// CreateTrainingPlan mocks base method.
+func (m *MockTrainingPlanRepo) CreateTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan) (uuid.UUID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTrainingPlan", arg0, arg1)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTrainingPlan indicates an expected call of CreateTrainingPlan.
+func (mr *MockTrainingPlanRepoMockRecorder) CreateTrainingPlan(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTrainingPlan", reflect.TypeOf((*MockTrainingPlanRepo)(nil).CreateTrainingPlan), arg0, arg1)
+}
+
 // GetTrainingPlan mocks base method.
 func (m *MockTrainingPlanRepo) GetTrainingPlan(arg0 context.Context, arg1 uuid.UUID) (entity.TrainingPlan, error) {
 	m.ctrl.T.Helper()
@@ -291,33 +306,18 @@ func (mr *MockTrainingPlanRepoMockRecorder) ListTrainingPlan(arg0 any) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListTrainingPlan", reflect.TypeOf((*MockTrainingPlanRepo)(nil).ListTrainingPlan), arg0)
 }
 
-// StoreTrainingPlan mocks base method.
-func (m *MockTrainingPlanRepo) StoreTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan) (uuid.UUID, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StoreTrainingPlan", arg0, arg1)
-	ret0, _ := ret[0].(uuid.UUID)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// StoreTrainingPlan indicates an expected call of StoreTrainingPlan.
-func (mr *MockTrainingPlanRepoMockRecorder) StoreTrainingPlan(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreTrainingPlan", reflect.TypeOf((*MockTrainingPlanRepo)(nil).StoreTrainingPlan), arg0, arg1)
-}
-
 // UpdateTrainingPlan mocks base method.
-func (m *MockTrainingPlanRepo) UpdateTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan, arg2 uuid.UUID) error {
+func (m *MockTrainingPlanRepo) UpdateTrainingPlan(arg0 context.Context, arg1 dto.UpdateTrainingPlan) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateTrainingPlan", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "UpdateTrainingPlan", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateTrainingPlan indicates an expected call of UpdateTrainingPlan.
-func (mr *MockTrainingPlanRepoMockRecorder) UpdateTrainingPlan(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockTrainingPlanRepoMockRecorder) UpdateTrainingPlan(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTrainingPlan", reflect.TypeOf((*MockTrainingPlanRepo)(nil).UpdateTrainingPlan), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTrainingPlan", reflect.TypeOf((*MockTrainingPlanRepo)(nil).UpdateTrainingPlan), arg0, arg1)
 }
 
 // MockPlanHistoryRepo is a mock of PlanHistoryRepo interface.
@@ -495,6 +495,21 @@ func (mr *MockGenerationRepoMockRecorder) CreateTraining(arg0 any) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTraining", reflect.TypeOf((*MockGenerationRepo)(nil).CreateTraining), arg0)
 }
 
+// CreateTrainingPlan mocks base method.
+func (m *MockGenerationRepo) CreateTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan) (uuid.UUID, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTrainingPlan", arg0, arg1)
+	ret0, _ := ret[0].(uuid.UUID)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTrainingPlan indicates an expected call of CreateTrainingPlan.
+func (mr *MockGenerationRepoMockRecorder) CreateTrainingPlan(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTrainingPlan", reflect.TypeOf((*MockGenerationRepo)(nil).CreateTrainingPlan), arg0, arg1)
+}
+
 // GetGroupByName mocks base method.
 func (m *MockGenerationRepo) GetGroupByName(arg0 context.Context, arg1 string) (entity.TrainingGroup, error) {
 	m.ctrl.T.Helper()
@@ -567,21 +582,6 @@ func (m *MockGenerationRepo) RecentPlans(arg0 context.Context, arg1 uuid.UUID, a
 func (mr *MockGenerationRepoMockRecorder) RecentPlans(arg0, arg1, arg2 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecentPlans", reflect.TypeOf((*MockGenerationRepo)(nil).RecentPlans), arg0, arg1, arg2)
-}
-
-// StoreTrainingPlan mocks base method.
-func (m *MockGenerationRepo) StoreTrainingPlan(arg0 context.Context, arg1 entity.TrainingPlan) (uuid.UUID, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StoreTrainingPlan", arg0, arg1)
-	ret0, _ := ret[0].(uuid.UUID)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// StoreTrainingPlan indicates an expected call of StoreTrainingPlan.
-func (mr *MockGenerationRepoMockRecorder) StoreTrainingPlan(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreTrainingPlan", reflect.TypeOf((*MockGenerationRepo)(nil).StoreTrainingPlan), arg0, arg1)
 }
 
 // MockGenerationTaskRepo is a mock of GenerationTaskRepo interface.

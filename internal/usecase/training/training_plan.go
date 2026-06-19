@@ -24,9 +24,9 @@ func NewPlanUseCase(l *logger.Logger, r repo.TrainingPlanRepo) *PlanUseCase {
 	}
 }
 
-func (us *PlanUseCase) StoreTrainingPlan(ctx context.Context, p entity.TrainingPlan) (uuid.UUID, error) {
-	const op = "training.StoreTrainingPlan"
-	id, err := us.r.StoreTrainingPlan(ctx, p)
+func (us *PlanUseCase) CreateTrainingPlan(ctx context.Context, p entity.TrainingPlan) (uuid.UUID, error) {
+	const op = "training.CreateTrainingPlan"
+	id, err := us.r.CreateTrainingPlan(ctx, p)
 	if err != nil {
 		us.l.Error("Failed to create plan %v (op=%v)", err, op)
 	}

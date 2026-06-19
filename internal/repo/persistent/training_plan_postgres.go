@@ -43,7 +43,7 @@ func (r *PlanRepo) ListTrainingPlan(ctx context.Context) ([]entity.TrainingPlan,
 	}
 	return out, nil
 }
-func (r *PlanRepo) StoreTrainingPlan(ctx context.Context, p entity.TrainingPlan) (uuid.UUID, error) {
+func (r *PlanRepo) CreateTrainingPlan(ctx context.Context, p entity.TrainingPlan) (uuid.UUID, error) {
 	tx, err := r.Pool.Begin(ctx)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("create plan begin: %w", err)
