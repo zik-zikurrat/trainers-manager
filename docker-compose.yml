@@ -1,6 +1,6 @@
 services:
   db_training:
-    image: postgres:14-alpine
+    image: postgres:18-alpine
     container_name: db_training
     environment:
       POSTGRES_USER: ${POSTGRES_TRAINING_USER}
