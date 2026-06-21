@@ -47,6 +47,12 @@ func (r *V1) Generate(c *fiber.Ctx) error {
 		}
 		if _, err := r.generator.Generate(ctx, req.TrainType, req.StructureID, task_id); err != nil {
 			r.l.Error("background generate failed: %v", err)
+			errMsg := err.Error()
+			r.genCh <- workers.GenEvent{
+				TaskID: task_id,
+				Status: "ERROR",
+				Error:  &errMsg,
+			}
 		}
 	}()
 
