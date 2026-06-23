@@ -20,7 +20,7 @@ import (
 // @title       Trainers manager
 // @description Create training plan
 // @version     1.0
-// @host        localhost:3033
+// @host        localhost:9045
 // @BasePath    /v1
 func NewRouter(
 	app *fiber.App,
