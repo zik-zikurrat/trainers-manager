@@ -85,9 +85,10 @@ func Run(cfg *config.Config) error {
 	)
 	httpserver.Start()
 
+	// REGISTER ENDPOINTS IN SSO
 	var endpoints []*ssov1.Endpoint
 	for _, r := range httpserver.App.GetRoutes() {
-		if r.Method == "HEAD" {
+		if !isCorrectRoute(r.Method, r.Path) {
 			continue
 		}
 		endpoints = append(endpoints, &ssov1.Endpoint{
@@ -116,4 +117,17 @@ func Run(cfg *config.Config) error {
 	}
 
 	return httpserver.Shutdown()
+}
+
+func isCorrectRoute(method string, path string) bool {
+	if path == "/" {
+		return false
+	}
+	badMethods := []string{"HEAD", "CONNECT", "OPTIONS", "TRACE"}
+	for _, val := range badMethods {
+		if method == val {
+			return false
+		}
+	}
+	return true
 }
