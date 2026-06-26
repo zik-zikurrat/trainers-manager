@@ -3,6 +3,7 @@ module trainers-manager
 go 1.25.5
 
 require (
+	buf.build/gen/go/zik-zikurrat-sso/sso/connectrpc/go v1.20.0-20260625125942-dec545b45f08.1
 	github.com/go-playground/validator/v10 v10.30.2
 	github.com/gofiber/fiber/v2 v2.52.13
 	github.com/golang-migrate/migrate/v4 v4.19.1
@@ -15,6 +16,8 @@ require (
 )
 
 require (
+	buf.build/gen/go/zik-zikurrat-sso/sso/protocolbuffers/go v1.36.11-20260625125942-dec545b45f08.1 // indirect
+	connectrpc.com/connect v1.20.0 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.13 // indirect
@@ -45,6 +48,7 @@ require (
 	golang.org/x/crypto v0.51.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
+	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )

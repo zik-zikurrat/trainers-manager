@@ -14,7 +14,12 @@ import (
 	"trainers-manager/pkg/httpserver"
 	"trainers-manager/pkg/logger"
 	"trainers-manager/pkg/postgres"
+	"trainers-manager/pkg/ssoclient"
 	"trainers-manager/pkg/workers"
+
+	ssov1 "buf.build/gen/go/zik-zikurrat-sso/sso/protocolbuffers/go/sso/v1"
+	"connectrpc.com/connect"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 func Run(cfg *config.Config) error {
@@ -60,6 +65,8 @@ func Run(cfg *config.Config) error {
 	// Partition
 	StartPartitionMaintainer(ctx, partitionsRepo, l)
 
+	ssoClient := ssoclient.New(cfg.SSO.URL)
+
 	httpserver := httpserver.New(ctx, l, cfg)
 	restapi.NewRouter(
 		httpserver.App,
@@ -77,6 +84,27 @@ func Run(cfg *config.Config) error {
 		genEventCh,
 	)
 	httpserver.Start()
+
+	var endpoints []*ssov1.Endpoint
+	for _, r := range httpserver.App.GetRoutes() {
+		if r.Method == "HEAD" {
+			continue
+		}
+		endpoints = append(endpoints, &ssov1.Endpoint{
+			Method: r.Method,
+			Path:   r.Path,
+		})
+	}
+
+	resp, err := ssoClient.RegisterService(ctx, connect.NewRequest(&ssov1.RegisterServiceRequest{
+		Name:      "trainers-manager",
+		Metadata:  map[string]string{"env": cfg.Env},
+		Endpoints: endpoints,
+	}))
+	if err != nil {
+		log.Error("failed to register in SSO", err)
+	}
+	log.Info("registered in SSO", "service_id", resp.Msg.GetMsg())
 
 	select {
 	case <-ctx.Done():

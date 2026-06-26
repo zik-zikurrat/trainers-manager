@@ -12,6 +12,7 @@ type Config struct {
 	StoragePath string        `yaml:"storage_path" env-required:"true"`
 	PG          PGConfig      `yaml:"postgre" env-required:"true"`
 	LLM         LLMConfig     `yaml:"llm"`
+	SSO         SSOConfig     `yaml:"sso"`
 	Server      ServerConfig  `yaml:"server" env-required:"true"`
 	Logging     LoggingConfig `yaml:"logging_handler"`
 }
@@ -44,6 +45,10 @@ type ServerConfig struct {
 	WriteTimeout    int    `yaml:"write_timeout"`
 	ShutdownTimeout int    `yaml:"shutdown_timeout"`
 	Prefork         bool   `yaml:"prefork"`
+}
+
+type SSOConfig struct {
+	URL string `yaml:"url" env:"SSO_URL"`
 }
 
 func MustLoad() *Config {
