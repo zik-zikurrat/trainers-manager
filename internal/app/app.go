@@ -19,7 +19,6 @@ import (
 
 	ssov1 "buf.build/gen/go/zik-zikurrat-sso/sso/protocolbuffers/go/sso/v1"
 	"connectrpc.com/connect"
-	"github.com/gofiber/fiber/v2/log"
 )
 
 func Run(cfg *config.Config) error {
@@ -93,19 +92,19 @@ func Run(cfg *config.Config) error {
 		}
 		endpoints = append(endpoints, &ssov1.Endpoint{
 			Method: r.Method,
-			Path:   r.Path,
+			Url:    r.Path,
 		})
 	}
 
 	resp, err := ssoClient.RegisterService(ctx, connect.NewRequest(&ssov1.RegisterServiceRequest{
 		Name:      "trainers-manager",
-		Metadata:  map[string]string{"env": cfg.Env},
 		Endpoints: endpoints,
 	}))
 	if err != nil {
-		log.Error("failed to register in SSO", err)
+		l.Error(fmt.Errorf("failed to register in SSO: %w", err))
+	} else {
+		l.Info("registered in SSO service_id: %s", resp.Msg.GetServiceId())
 	}
-	log.Info("registered in SSO", "service_id", resp.Msg.GetMsg())
 
 	select {
 	case <-ctx.Done():
