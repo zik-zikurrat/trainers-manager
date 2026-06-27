@@ -4,7 +4,9 @@ go 1.25.5
 
 require (
 	buf.build/gen/go/zik-zikurrat-sso/sso/connectrpc/go v1.20.0-20260627064408-1fc8f9463105.1
-	github.com/go-playground/validator/v10 v10.30.2
+	buf.build/gen/go/zik-zikurrat-sso/sso/protocolbuffers/go v1.36.11-20260627064408-1fc8f9463105.1
+	connectrpc.com/connect v1.20.0
+	github.com/go-playground/validator/v10 v10.30.3
 	github.com/gofiber/fiber/v2 v2.52.13
 	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/google/uuid v1.6.0
@@ -16,8 +18,6 @@ require (
 )
 
 require (
-	buf.build/gen/go/zik-zikurrat-sso/sso/protocolbuffers/go v1.36.11-20260627064408-1fc8f9463105.1 // indirect
-	connectrpc.com/connect v1.20.0 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.13 // indirect
@@ -45,7 +45,7 @@ require (
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.68.0 // indirect
 	go.opentelemetry.io/otel/metric v1.44.0 // indirect
 	go.opentelemetry.io/otel/trace v1.44.0 // indirect
-	golang.org/x/crypto v0.51.0 // indirect
+	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
