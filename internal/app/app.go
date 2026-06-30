@@ -119,7 +119,7 @@ func Run(cfg *config.Config) error {
 }
 
 func isCorrectRoute(method string, path string) bool {
-	if path == "/" {
+	if path == "/" || path == "/v1" {
 		return false
 	}
 	badMethods := []string{"HEAD", "CONNECT", "OPTIONS", "TRACE"}
